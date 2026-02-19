@@ -64,6 +64,8 @@ Route::middleware(['auth:user', 'admin'])->prefix('admin')->group(function () {
         Route::post('/{intervention}/assign-finance', [AdminIntervention::class, 'assignFinance'])->name('admin.interventions.assign_finance');
         Route::get('/create', [AdminIntervention::class, 'create'])->name('admin.interventions.create');
         Route::post('/', [AdminIntervention::class, 'store'])->name('admin.interventions.store');
+        Route::get('/archives', [AdminIntervention::class, 'archives'])->name('admin.interventions.archives');
+        Route::get('/payees', [AdminIntervention::class, 'payees'])->name('admin.interventions.payees');
         Route::get('/{intervention}', [AdminIntervention::class, 'show'])->name('admin.interventions.show');
         Route::get('/{intervention}/details', [AdminIntervention::class, 'details'])->name('admin.interventions.details');
         Route::post('/{intervention}/envoyer', [AdminIntervention::class, 'envoyer'])->name('admin.interventions.envoyer');
@@ -72,9 +74,7 @@ Route::middleware(['auth:user', 'admin'])->prefix('admin')->group(function () {
         Route::get('/{intervention}/edit', [AdminIntervention::class, 'edit'])->name('admin.interventions.edit');
         Route::put('/{intervention}', [AdminIntervention::class, 'update'])->name('admin.interventions.update');
         Route::delete('/{intervention}', [AdminIntervention::class, 'destroy'])->name('admin.interventions.destroy');
-        Route::get('/archives', [AdminIntervention::class, 'archives'])->name('admin.interventions.archives');
         Route::patch('/{intervention}/restore', [AdminIntervention::class, 'restore'])->name('admin.interventions.restore');
-        Route::get('/payees', [AdminIntervention::class, 'payees'])->name('admin.interventions.payees');
     });
 
     // Gestion des équipements et catégories
