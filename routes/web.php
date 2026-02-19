@@ -18,14 +18,14 @@ use App\Http\Controllers\Admin\SiteController;
 use App\Http\Controllers\ForfaitController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('home.accueil');
-});
+// Route::get('/', function () {
+//     return view('home.accueil');
+// });
 
 //Les routes de gestion de l'admin(M.KADIO)
 Route::prefix('/')->group(function () {
-    Route::get('/login', [UserAuthenticate::class, 'login'])->name('login');
-    Route::post('/login', [UserAuthenticate::class, 'handleLogin'])->name('user.login');
+    Route::get('/', [UserAuthenticate::class, 'login'])->name('login');
+    Route::post('/', [UserAuthenticate::class, 'handleLogin'])->name('user.login');
 
     // Mot de passe oublié
     Route::get('/forgot-password', [UserAuthenticate::class, 'forgotPassword'])->name('password.request');
