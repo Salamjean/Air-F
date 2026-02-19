@@ -21,9 +21,9 @@ return new class extends Migration
             $table->date('date_fin')->nullable();
             $table->decimal('montant', 12, 2)->default(0);
             $table->string('statut')->default('en_attente');
-            $table->foreignId('admin_id')->nullable()->constrained()->onDelete('cascade');
-            $table->foreignId('prestataire_id')->nullable()->constrained()->onDelete('cascade');
-            $table->foreignId('financier_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('admin_id')->nullable()->constrained('users')->onDelete('cascade');
+            $table->foreignId('prestataire_id')->nullable()->constrained('users')->onDelete('cascade');
+            $table->foreignId('financier_id')->nullable()->constrained('users')->onDelete('cascade');
             $table->foreignId('personnel_id')->nullable()->constrained('users')->onDelete('set null');
             $table->foreignId('responsable_id')->nullable()->constrained('users')->onDelete('set null');
             $table->string('devis_path')->nullable();
