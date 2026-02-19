@@ -16,6 +16,23 @@
         body {
             font-family: 'Outfit', sans-serif;
         }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #111827;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 10px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #4b5563;
+        }
     </style>
     @stack('styles')
 </head>
@@ -86,12 +103,12 @@
                 icon: 'error',
                 title: 'Erreur de validation',
                 html: `
-                    <ul style="text-align: center; color:red">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                `,
+                        <ul style="text-align: center; color:red">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    `,
                 confirmButtonText: 'OK'
             });
         @endif

@@ -88,14 +88,16 @@ Route::middleware(['auth:user', 'admin'])->prefix('admin')->group(function () {
         'update' => 'admin.equipements.update',
         'destroy' => 'admin.equipements.destroy',
     ]);
-    Route::resource('equipement-categories', EquipementCategoryController::class)->names([
-        'index' => 'admin.categories.index',
-        'create' => 'admin.categories.create',
-        'store' => 'admin.categories.store',
-        'edit' => 'admin.categories.edit',
-        'update' => 'admin.categories.update',
-        'destroy' => 'admin.categories.destroy',
-    ]);
+    Route::resource('equipement-categories', EquipementCategoryController::class)->parameters([
+        'equipement-categories' => 'category'
+    ])->names([
+                'index' => 'admin.categories.index',
+                'create' => 'admin.categories.create',
+                'store' => 'admin.categories.store',
+                'edit' => 'admin.categories.edit',
+                'update' => 'admin.categories.update',
+                'destroy' => 'admin.categories.destroy',
+            ]);
 
     Route::resource('sites', SiteController::class)->names([
         'index' => 'admin.sites.index',

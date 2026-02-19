@@ -1,10 +1,10 @@
-<div class="fixed inset-y-0 left-0 w-64 bg-gray-900 text-white transition-transform transform -translate-x-full md:translate-x-0 z-30"
+<div class="fixed inset-y-0 left-0 w-64 bg-gray-900 text-white transition-transform transform -translate-x-full md:translate-x-0 z-30 flex flex-col"
     id="sidebar">
     <div class="flex items-center justify-center h-16 bg-red-700 shadow-md">
         <h1 class="text-2xl font-bold tracking-wider uppercase">{{ Auth::guard('user')->user()->role ?? 'Admin' }}</h1>
     </div>
 
-    <nav class="mt-6">
+    <nav class="flex-1 overflow-y-auto py-4 custom-scrollbar">
         <div class="px-4 mb-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">
             Menu Principal
         </div>
@@ -197,7 +197,7 @@
         </a> -->
     </nav>
 
-    <div class="absolute bottom-0 w-full p-4 border-t border-gray-800">
+    <div class="w-full p-4 border-t border-gray-800 bg-gray-900">
         <a href="#" class="flex items-center text-gray-400 hover:text-white transition-colors">
             <div class="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center mr-3">
                 <i class="fas fa-user-shield text-xs"></i>
