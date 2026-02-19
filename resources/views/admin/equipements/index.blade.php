@@ -1,11 +1,11 @@
 @extends('admin.layouts.template')
 
-@section('title', 'Gestion du Stock d\'Equipements')
+@section('title', 'Gestion du Stock des consommables')
 
 @section('content')
     <div class="container mx-auto">
         <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-gray-800">Gestion du Stock d'Equipements</h2>
+            <h2 class="text-2xl font-bold text-gray-800">Gestion du Stock des consommables</h2>
             <div class="flex gap-2">
                 <a href="{{ route('admin.equipements.history') }}"
                     class="bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-lg transition-colors flex items-center shadow-md">
@@ -13,7 +13,7 @@
                 </a>
                 <a href="{{ route('admin.equipements.create') }}"
                     class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center shadow-md">
-                    <i class="fas fa-plus mr-2 text-xs"></i> Ajouter un Equipement
+                    <i class="fas fa-plus mr-2 text-xs"></i> Ajouter un consommable
                 </a>
             </div>
         </div>
@@ -22,7 +22,7 @@
         <div class="mb-6 flex flex-wrap gap-2">
             <a href="{{ route('admin.equipements.index') }}"
                 class="px-5 py-2 rounded-full text-sm font-medium transition-all {{ !$categoryId ? 'bg-red-600 text-white shadow-md' : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200' }}">
-                Tous les Equipements
+                Tous les consommables
             </a>
             @foreach($categories as $category)
                 <a href="{{ route('admin.equipements.index', ['category_id' => $category->id]) }}"
@@ -39,6 +39,7 @@
                         <th class="px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wider">Image</th>
                         <th class="px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wider">Désignation</th>
                         <th class="px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wider">Catégorie</th>
+                        <th class="px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wider">Site(s)</th>
                         <th class="px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wider text-center">En
                             Stock</th>
                         <th class="px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wider">Ajouté par</th>
@@ -90,6 +91,16 @@
                                     {{ $equipement->category->name }}
                                 </span>
                             </td>
+                            <td class="px-6 py-4">
+                                @forelse($equipement->sites as $site)
+                                    <span
+                                        class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 mb-1 mr-1">
+                                        <i class="fas fa-map-marker-alt mr-1"></i> {{ $site->name }}
+                                    </span>
+                                @empty
+                                    <span class="text-xs text-gray-400 italic">Aucun site</span>
+                                @endforelse
+                            </td>
                             <td class="px-6 py-4 text-center">
                                 <div class="flex flex-col items-center">
                                     <span
@@ -121,7 +132,7 @@
                                     </a>
                                     <form action="{{ route('admin.equipements.destroy', $equipement) }}" method="POST"
                                         class="inline-block"
-                                        onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet équipement ?')">
+                                        onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce consommable ?')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="text-red-600 hover:text-red-800 transition-colors p-2"
@@ -139,7 +150,7 @@
                                     <div class="bg-gray-50 rounded-full p-4 mb-4">
                                         <i class="fas fa-box-open text-gray-300 text-4xl"></i>
                                     </div>
-                                    <p class="text-gray-500 font-medium">Aucun équipement trouvé dans cette catégorie.</p>
+                                    <p class="text-gray-500 font-medium">Aucun consommable trouvé dans cette catégorie.</p>
                                     @if($categories->count() == 0)
                                         <a href="{{ route('admin.categories.create') }}"
                                             class="mt-4 text-red-600 font-semibold hover:underline">
@@ -175,7 +186,7 @@
                         <div class="bg-blue-50 p-4 rounded-xl border border-blue-100 flex items-center gap-3">
                             <i class="fas fa-info-circle text-blue-500"></i>
                             <p class="text-xs text-blue-700 font-medium">
-                                Équipement : <span id="modalEquipName" class="font-bold"></span>
+                                Consommable : <span id="modalEquipName" class="font-bold"></span>
                             </p>
                         </div>
 

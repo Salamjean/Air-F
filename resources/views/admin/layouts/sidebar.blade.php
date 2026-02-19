@@ -130,7 +130,7 @@
                 class="w-full flex items-center justify-between px-6 py-3 {{ request()->is('admin/equipements*') || request()->is('admin/categories*') || request()->is('admin/sites*') ? 'bg-gray-800 text-gray-100 border-l-4 border-red-500' : 'text-gray-400 hover:bg-gray-800 hover:text-gray-100' }} transition-all border-l-4 border-transparent focus:outline-none group">
                 <div class="flex items-center">
                     <i class="fas fa-tools w-6"></i>
-                    <span class="mx-3 font-medium">Equipements & Sites</span>
+                    <span class="mx-3 font-medium">Consommables & Sites</span>
                 </div>
                 <i class="fas fa-chevron-down text-xs transition-transform transform {{ request()->is('admin/equipements*') || request()->is('admin/categories*') || request()->is('admin/sites*') ? 'rotate-180' : '' }}"
                     id="equipements-chevron"></i>
@@ -139,7 +139,7 @@
                 class="{{ request()->is('admin/equipements*') || request()->is('admin/categories*') || request()->is('admin/sites*') ? '' : 'hidden' }} bg-gray-800 overflow-hidden transition-all duration-300">
                 <a href="{{ route('admin.equipements.index') }}"
                     class="flex items-center pl-16 py-2 text-sm {{ request()->routeIs('admin.equipements.index') ? 'text-white font-bold' : 'text-gray-400 hover:text-white' }} hover:bg-gray-700 transition-colors">
-                    <i class="fas fa-list w-4 text-xs mr-2"></i> Liste
+                    <i class="fas fa-list w-4 text-xs mr-2"></i> Gestion de Stock
                 </a>
                 <a href="{{ route('admin.categories.index') }}"
                     class="flex items-center pl-16 py-2 text-sm {{ request()->routeIs('admin.categories.index') ? 'text-white font-bold' : 'text-gray-400 hover:text-white' }} hover:bg-gray-700 transition-colors">

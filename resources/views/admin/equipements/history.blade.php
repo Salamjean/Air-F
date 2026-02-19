@@ -1,13 +1,13 @@
 @extends('admin.layouts.template')
 
-@section('title', 'Historique d\'Utilisation des Équipements')
+@section('title', 'Historique des consommables')
 
 @section('content')
     <div class="container mx-auto">
         <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
             <div>
-                <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Historique d'Utilisation</h2>
-                <p class="text-gray-500 mt-1">Suivi détaillé des équipements utilisés lors des interventions.</p>
+                <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Historique des consommables</h2>
+                <p class="text-gray-500 mt-1">Suivi détaillé des consommables utilisés lors des interventions.</p>
             </div>
             <a href="{{ route('admin.equipements.index') }}"
                 class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-50 transition-all shadow-sm">

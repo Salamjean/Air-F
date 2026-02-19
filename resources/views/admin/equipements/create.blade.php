@@ -1,6 +1,6 @@
 @extends('admin.layouts.template')
 
-@section('title', 'Ajouter un Equipement')
+@section('title', 'Ajouter un Consommable')
 
 @section('content')
     <div class="container mx-auto">
@@ -9,7 +9,7 @@
                 <a href="{{ route('admin.equipements.index') }}" class="text-gray-600 hover:text-gray-800 mr-4">
                     <i class="fas fa-arrow-left text-xl"></i>
                 </a>
-                <h2 class="text-2xl font-bold text-gray-800">Ajouter un Equipement au Stock</h2>
+                <h2 class="text-2xl font-bold text-gray-800">Ajouter un Consommable au Stock</h2>
             </div>
 
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
@@ -20,8 +20,8 @@
                         <!-- Left Column -->
                         <div class="space-y-6">
                             <div>
-                                <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Désignation de
-                                    l'équipement</label>
+                                <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Désignation du
+                                    consommable</label>
                                 <input type="text" name="name" id="name" value="{{ old('name') }}" required
                                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all"
                                     placeholder="Ex: Projecteur EPSON EB-W06">
@@ -51,6 +51,19 @@
                                     @foreach($categories as $category)
                                         <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
                                             {{ $category->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="site_id" class="block text-sm font-medium text-gray-700 mb-2">Site de stockage</label>
+                                <select name="site_id" id="site_id" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all bg-white">
+                                    <option value="">Sélectionner un site</option>
+                                    @foreach($sites as $site)
+                                        <option value="{{ $site->id }}" {{ old('site_id') == $site->id ? 'selected' : '' }}>
+                                            {{ $site->name }} ({{ $site->code }})
                                         </option>
                                     @endforeach
                                 </select>
@@ -86,7 +99,7 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Image de l'équipement</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Image du consommable</label>
                                 <div class="flex items-center justify-center w-full">
                                     <label for="image"
                                         class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-all">
@@ -106,7 +119,7 @@
                     <div class="flex justify-end pt-8 mt-6 border-t border-gray-100">
                         <button type="submit"
                             class="bg-red-600 hover:bg-red-700 text-white px-10 py-3 rounded-lg font-bold transition-all shadow-md hover:shadow-lg active:scale-95">
-                            <i class="fas fa-save mr-2"></i> Enregistrer l'équipement
+                            <i class="fas fa-save mr-2"></i> Enregistrer le consommable
                         </button>
                     </div>
                 </form>

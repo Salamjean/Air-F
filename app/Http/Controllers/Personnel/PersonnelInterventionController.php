@@ -80,7 +80,10 @@ class PersonnelInterventionController extends Controller
             return back()->with('error', 'Seul le chef d\'équipe désigné peut soumettre le rapport.');
         }
 
-        $equipements = Equipement::where('stock_quantity', '>', 0)->get();
+        $equipements = Equipement::whereHas('sites', function ($q) use ($intervention) {
+            $q->where('sites.id', $intervention->site_id)
+                ->where('equipement_site.quantity', '>', 0);
+        })->get();
 
         return view('personnel.interventions.edit', compact('intervention', 'equipements'));
     }
@@ -123,18 +126,31 @@ class PersonnelInterventionController extends Controller
             $intervention->statut = 'traiter';
             $intervention->save();
 
-            // Handle equipment usage
+            // Handle equipment usage (Consommables)
             if ($request->has('equipements')) {
                 foreach ($request->equipements as $item) {
                     $equipement = Equipement::find($item['id']);
+                    $siteId = $intervention->site_id;
 
-                    if ($equipement->stock_quantity < $item['quantity']) {
-                        throw new Exception("Stock insuffisant pour l'équipement : " . $equipement->name);
+                    // Check stock on the specific site
+                    $siteStock = DB::table('equipement_site')
+                        ->where('equipement_id', $equipement->id)
+                        ->where('site_id', $siteId)
+                        ->first();
+
+                    if (!$siteStock || $siteStock->quantity < $item['quantity']) {
+                        throw new Exception("Stock insuffisant sur ce site pour : " . $equipement->name);
                     }
 
                     $intervention->equipements()->attach($item['id'], ['quantity' => $item['quantity']]);
 
-                    // Deduct from stock
+                    // Deduct from site stock
+                    DB::table('equipement_site')
+                        ->where('equipement_id', $equipement->id)
+                        ->where('site_id', $siteId)
+                        ->decrement('quantity', $item['quantity']);
+
+                    // Deduct from global stock
                     $equipement->decrement('stock_quantity', $item['quantity']);
 
                     // Log stock movement for usage
@@ -143,8 +159,8 @@ class PersonnelInterventionController extends Controller
                         'user_id' => auth()->id(),
                         'intervention_id' => $intervention->id,
                         'type' => 'usage',
-                        'quantity' => -$item['quantity'], // Negative for usage
-                        'description' => "Utilisation lors de l'intervention {$intervention->code}",
+                        'quantity' => -$item['quantity'],
+                        'description' => "Utilisation sur site {$intervention->site->name} ({$intervention->code})",
                     ]);
                 }
             }

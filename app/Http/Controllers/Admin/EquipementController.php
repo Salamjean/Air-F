@@ -7,6 +7,7 @@ use App\Models\Equipement;
 use App\Models\EquipementCategory;
 use App\Models\Intervention;
 use App\Models\StockMovement;
+use App\Models\Site;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -18,7 +19,7 @@ class EquipementController extends Controller
         $categories = EquipementCategory::all();
         $categoryId = $request->get('category_id');
 
-        $query = Equipement::with(['category', 'creator']);
+        $query = Equipement::with(['category', 'creator', 'sites']);
 
         if ($categoryId) {
             $query->where('category_id', $categoryId);
@@ -32,7 +33,8 @@ class EquipementController extends Controller
     public function create()
     {
         $categories = EquipementCategory::all();
-        return view('admin.equipements.create', compact('categories'));
+        $sites = Site::all();
+        return view('admin.equipements.create', compact('categories', 'sites'));
     }
 
     public function store(Request $request)
@@ -48,6 +50,7 @@ class EquipementController extends Controller
             'stock_quantity' => 'required|integer|min:0',
             'stock_min_alert' => 'required|integer|min:0',
             'unit' => 'required|string|max:50',
+            'site_id' => 'required|exists:sites,id',
         ]);
 
         $data = $request->all();
@@ -57,7 +60,13 @@ class EquipementController extends Controller
             $data['image'] = $request->file('image')->store('equipements', 'public');
         }
 
-        Equipement::create($data);
+        $equipement = Equipement::create($data);
+
+        // Associate with site
+        $equipement->sites()->attach($request->site_id, [
+            'quantity' => $request->stock_quantity,
+            'alert_threshold' => $request->stock_min_alert,
+        ]);
 
         return redirect()->route('admin.equipements.index')->with('success', 'Équipement ajouté avec succès.');
     }
@@ -65,7 +74,9 @@ class EquipementController extends Controller
     public function edit(Equipement $equipement)
     {
         $categories = EquipementCategory::all();
-        return view('admin.equipements.edit', compact('equipement', 'categories'));
+        $sites = Site::all();
+        $currentSiteId = $equipement->sites()->first()?->id;
+        return view('admin.equipements.edit', compact('equipement', 'categories', 'sites', 'currentSiteId'));
     }
 
     public function update(Request $request, Equipement $equipement)
@@ -83,6 +94,7 @@ class EquipementController extends Controller
             'stock_min_alert' => 'required|integer|min:0',
             'unit' => 'required|string|max:20',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'site_id' => 'required|exists:sites,id',
         ]);
 
         $data = $request->all();
@@ -106,6 +118,14 @@ class EquipementController extends Controller
                 'description' => 'Ajustement manuel du stock (Modification)',
             ]);
         }
+
+        // Update site association
+        $equipement->sites()->sync([
+            $request->site_id => [
+                'quantity' => $equipement->stock_quantity,
+                'alert_threshold' => $equipement->stock_min_alert,
+            ]
+        ]);
 
         return redirect()->route('admin.equipements.index')->with('success', 'Équipement mis à jour avec succès.');
     }
