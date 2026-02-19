@@ -1,0 +1,236 @@
+@extends('admin.layouts.template')
+
+@section('title', 'Gestion du Stock d\'Equipements')
+
+@section('content')
+    <div class="container mx-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">Gestion du Stock d'Equipements</h2>
+            <div class="flex gap-2">
+                <a href="{{ route('admin.equipements.history') }}"
+                    class="bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-lg transition-colors flex items-center shadow-md">
+                    <i class="fas fa-history mr-2 text-xs"></i> Historique
+                </a>
+                <a href="{{ route('admin.equipements.create') }}"
+                    class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center shadow-md">
+                    <i class="fas fa-plus mr-2 text-xs"></i> Ajouter un Equipement
+                </a>
+            </div>
+        </div>
+
+        <!-- Category Tabs -->
+        <div class="mb-6 flex flex-wrap gap-2">
+            <a href="{{ route('admin.equipements.index') }}"
+                class="px-5 py-2 rounded-full text-sm font-medium transition-all {{ !$categoryId ? 'bg-red-600 text-white shadow-md' : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200' }}">
+                Tous les Equipements
+            </a>
+            @foreach($categories as $category)
+                <a href="{{ route('admin.equipements.index', ['category_id' => $category->id]) }}"
+                    class="px-5 py-2 rounded-full text-sm font-medium transition-all {{ $categoryId == $category->id ? 'bg-red-600 text-white shadow-md' : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200' }}">
+                    {{ $category->name }}
+                </a>
+            @endforeach
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-gray-50 border-b border-gray-200">
+                        <th class="px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wider">Image</th>
+                        <th class="px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wider">Désignation</th>
+                        <th class="px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wider">Catégorie</th>
+                        <th class="px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wider text-center">En
+                            Stock</th>
+                        <th class="px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wider">Ajouté par</th>
+                        <th class="px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wider text-right">
+                            Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    @forelse($equipements as $equipement)
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                @if($equipement->image)
+                                    <img src="{{ asset('storage/' . $equipement->image) }}" alt="{{ $equipement->name }}"
+                                        class="w-12 h-12 object-cover rounded-lg border border-gray-100">
+                                @else
+                                    <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400">
+                                        <i class="fas fa-tools text-xl"></i>
+                                    </div>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="text-sm font-bold text-gray-900">{{ $equipement->name }}</div>
+                                <div class="flex flex-wrap gap-2 mt-1">
+                                    @if($equipement->longueur)
+                                        <span
+                                            class="text-[10px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded border border-blue-100 font-medium">
+                                            <i class="fas fa-ruler-combined mr-1"></i>{{ $equipement->longueur }}
+                                        </span>
+                                    @endif
+                                    @if($equipement->type)
+                                        <span
+                                            class="text-[10px] bg-purple-50 text-purple-600 px-1.5 py-0.5 rounded border border-purple-100 font-medium">
+                                            <i class="fas fa-tag mr-1"></i>{{ $equipement->type }}
+                                        </span>
+                                    @endif
+                                    @if($equipement->numero_bien)
+                                        <span
+                                            class="text-[10px] bg-amber-50 text-amber-600 px-1.5 py-0.5 rounded border border-amber-100 font-medium">
+                                            <i class="fas fa-barcode mr-1"></i>{{ $equipement->numero_bien }}
+                                        </span>
+                                    @endif
+                                </div>
+                                @if($equipement->description)
+                                    <div class="text-xs text-gray-500 truncate max-w-xs mt-1">{{ $equipement->description }}</div>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-semibold">
+                                    {{ $equipement->category->name }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <div class="flex flex-col items-center">
+                                    <span
+                                        class="text-sm font-bold {{ $equipement->stock_quantity <= $equipement->stock_min_alert ? 'text-red-600 bg-red-50' : 'text-green-600 bg-green-50' }} px-3 py-1 rounded-lg">
+                                        {{ $equipement->stock_quantity }} {{ $equipement->unit }}
+                                    </span>
+                                    @if($equipement->stock_quantity <= $equipement->stock_min_alert)
+                                        <span class="text-[10px] text-red-500 font-medium uppercase tracking-tighter mt-1">Alerte
+                                            Stock Bas</span>
+                                    @endif
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-xs text-gray-600 font-medium">{{ $equipement->creator->name ?? 'N/A' }}
+                                    {{ $equipement->creator->prenom ?? '' }}
+                                </div>
+                                <div class="text-[10px] text-gray-400">{{ $equipement->created_at->format('d/m/Y H:i') }}</div>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <div class="flex justify-end space-x-2">
+                                    <button type="button"
+                                        onclick="openRechargeModal({{ $equipement->id }}, '{{ $equipement->name }}', '{{ $equipement->unit }}')"
+                                        class="text-green-600 hover:text-green-800 transition-colors p-2" title="Recharger">
+                                        <i class="fas fa-plus-circle"></i>
+                                    </button>
+                                    <a href="{{ route('admin.equipements.edit', $equipement) }}"
+                                        class="text-blue-600 hover:text-blue-800 transition-colors p-2" title="Modifier">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form action="{{ route('admin.equipements.destroy', $equipement) }}" method="POST"
+                                        class="inline-block"
+                                        onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet équipement ?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-red-600 hover:text-red-800 transition-colors p-2"
+                                            title="Supprimer">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="px-6 py-12 text-center">
+                                <div class="flex flex-col items-center">
+                                    <div class="bg-gray-50 rounded-full p-4 mb-4">
+                                        <i class="fas fa-box-open text-gray-300 text-4xl"></i>
+                                    </div>
+                                    <p class="text-gray-500 font-medium">Aucun équipement trouvé dans cette catégorie.</p>
+                                    @if($categories->count() == 0)
+                                        <a href="{{ route('admin.categories.create') }}"
+                                            class="mt-4 text-red-600 font-semibold hover:underline">
+                                            Commencez par créer une catégorie <i class="fas fa-arrow-right ml-1"></i>
+                                        </a>
+                                    @endif
+                                </div>
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Recharge Modal -->
+    <div id="rechargeModal" class="hidden fixed inset-0 z-50 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm transition-opacity" onclick="closeRechargeModal()">
+            </div>
+
+            <div class="relative bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden transform transition-all">
+                <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+                    <h3 class="text-lg font-bold text-gray-900">Recharger le Stock</h3>
+                    <button onclick="closeRechargeModal()" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <form id="rechargeForm" method="POST" action="">
+                    @csrf
+                    <div class="p-6 space-y-4">
+                        <div class="bg-blue-50 p-4 rounded-xl border border-blue-100 flex items-center gap-3">
+                            <i class="fas fa-info-circle text-blue-500"></i>
+                            <p class="text-xs text-blue-700 font-medium">
+                                Équipement : <span id="modalEquipName" class="font-bold"></span>
+                            </p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Quantité à ajouter</label>
+                            <div class="relative">
+                                <input type="number" name="quantity" required min="1"
+                                    class="block w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 text-sm outline-none transition-all">
+                                <span
+                                    class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 text-xs font-bold uppercase"
+                                    id="modalEquipUnit"></span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Description (facultatif)</label>
+                            <textarea name="description" rows="2" placeholder="Ex: Livraison fournisseur n°123..."
+                                class="block w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 text-sm outline-none transition-all"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 px-6 py-4 border-t border-gray-100 flex justify-end gap-3">
+                        <button type="button" onclick="closeRechargeModal()"
+                            class="px-4 py-2 text-sm font-bold text-gray-600 hover:text-gray-800 transition-colors">
+                            Annuler
+                        </button>
+                        <button type="submit"
+                            class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-xl text-sm font-bold transition-all shadow-md">
+                            Confirmer la Recharge
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openRechargeModal(id, name, unit) {
+            const modal = document.getElementById('rechargeModal');
+            const form = document.getElementById('rechargeForm');
+            const nameSpan = document.getElementById('modalEquipName');
+            const unitSpan = document.getElementById('modalEquipUnit');
+
+            form.action = `/admin/equipements/${id}/recharge`;
+            nameSpan.textContent = name;
+            unitSpan.textContent = unit;
+
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeRechargeModal() {
+            const modal = document.getElementById('rechargeModal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+    </script>
+@endsection
