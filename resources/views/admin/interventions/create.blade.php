@@ -221,33 +221,23 @@
                                     @enderror
                                 </div>
                                 <div class="space-y-6">
-                                    <div>
-                                        <label for="document_1" class="block text-sm font-bold text-[#111827] mb-2">Document joint 1</label>
-                                        <div class="relative group">
-                                            <input type="file" name="document_1" id="document_1"
-                                                class="w-full pl-4 pr-10 py-3 rounded-xl border border-gray-300 focus:border-red-600 focus:ring-0 transition-all bg-gray-50 focus:bg-white text-[#111827] font-medium group-hover:bg-white">
-                                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-red-500">
-                                                <i class="fas fa-file-alt"></i>
+                                    <div id="documents-container" class="space-y-4">
+                                        <div class="document-row">
+                                            <label class="block text-sm font-bold text-[#111827] mb-2 flex items-center justify-between">
+                                                <span>Documents joints (Images, PDF, Excel)</span>
+                                                <button type="button" onclick="addDocumentRow()" class="text-xs bg-[#111827] text-white px-2 py-1 rounded-lg hover:bg-red-600 transition-colors">
+                                                    <i class="fas fa-plus mr-1"></i> Ajouter
+                                                </button>
+                                            </label>
+                                            <div class="relative group">
+                                                <input type="file" name="documents[]" class="w-full pl-4 pr-10 py-3 rounded-xl border border-gray-300 focus:border-red-600 focus:ring-0 transition-all bg-gray-50 focus:bg-white text-[#111827] font-medium group-hover:bg-white" accept="image/*,.pdf,.xls,.xlsx">
+                                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-red-500">
+                                                    <i class="fas fa-file-upload"></i>
+                                                </div>
                                             </div>
                                         </div>
-                                        @error('document_1')
-                                            <p class="text-red-600 text-xs mt-1 font-bold">{{ $message }}</p>
-                                        @enderror
                                     </div>
-                                    <div>
-                                        <label for="document_2" class="block text-sm font-bold text-[#111827] mb-2">Document joint 2</label>
-                                        <div class="relative group">
-                                            <input type="file" name="document_2" id="document_2"
-                                                class="w-full pl-4 pr-10 py-3 rounded-xl border border-gray-300 focus:border-red-600 focus:ring-0 transition-all bg-gray-50 focus:bg-white text-[#111827] font-medium group-hover:bg-white">
-                                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-red-500">
-                                                <i class="fas fa-file-alt"></i>
-                                            </div>
-                                        </div>
-                                        @error('document_2')
-                                            <p class="text-red-600 text-xs mt-1 font-bold">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-                                    <p class="text-xs text-gray-400 italic">Formats acceptés : PDF, JPG, PNG (Max 2Mo)</p>
+                                    <p class="text-[10px] text-gray-400 italic mt-2">Max 10Mo par fichier. Formats : JPG, PNG, PDF, Excel.</p>
                                 </div>
                             </div>
                         </div>
@@ -308,5 +298,26 @@
             updateTasks();
         }
     });
+
+    function addDocumentRow() {
+        const container = document.getElementById('documents-container');
+        const newRow = document.createElement('div');
+        newRow.className = 'document-row mt-4 pt-4 border-t border-gray-50';
+        newRow.innerHTML = `
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-sm font-bold text-[#111827]">Document supplémentaire</span>
+                <button type="button" onclick="this.closest('.document-row').remove()" class="text-[10px] text-red-600 hover:text-red-800 font-bold">
+                    <i class="fas fa-times mr-1"></i> Retirer
+                </button>
+            </div>
+            <div class="relative group">
+                <input type="file" name="documents[]" class="w-full pl-4 pr-10 py-3 rounded-xl border border-gray-300 focus:border-red-600 focus:ring-0 transition-all bg-gray-50 focus:bg-white text-[#111827] font-medium group-hover:bg-white" accept="image/*,.pdf,.xls,.xlsx">
+                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-red-500">
+                    <i class="fas fa-file-upload"></i>
+                </div>
+            </div>
+        `;
+        container.appendChild(newRow);
+    }
 </script>
 @endpush

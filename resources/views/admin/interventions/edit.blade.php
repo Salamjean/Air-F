@@ -227,47 +227,69 @@
                             <p class="text-red-600 text-xs mt-1 font-bold">{{ $message }}</p>
                         @enderror
                     </div>
-                    <div class="space-y-6">
-                        <div>
-                            <label for="document_1" class="block text-sm font-bold text-[#111827] mb-2">Document joint 1</label>
-                            @if($intervention->document_1)
-                                <div class="mb-2 flex items-center text-xs text-blue-600">
-                                    <i class="fas fa-file-download mr-1"></i>
-                                    <a href="{{ asset('storage/' . $intervention->document_1) }}" target="_blank" class="hover:underline">Document actuel</a>
+                        <div id="documents-container" class="space-y-6">
+                            <!-- Legacy Documents (Old columns) -->
+                            @if($intervention->document_1 || $intervention->document_2)
+                                <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                                    <h4 class="text-xs font-bold text-gray-500 uppercase mb-3 px-1">Documents Hérités</h4>
+                                    <div class="space-y-2">
+                                        @if($intervention->document_1)
+                                            <div class="flex items-center justify-between bg-white p-2 rounded-lg border border-gray-100">
+                                                <span class="text-sm text-gray-700 truncate mr-4"><i class="fas fa-file-alt mr-2 text-gray-400"></i>Document 1</span>
+                                                <a href="{{ asset('storage/' . $intervention->document_1) }}" target="_blank" class="text-blue-600 hover:text-blue-800 text-xs font-bold whitespace-nowrap">
+                                                    <i class="fas fa-download mr-1"></i> Ouvrir
+                                                </a>
+                                            </div>
+                                        @endif
+                                        @if($intervention->document_2)
+                                            <div class="flex items-center justify-between bg-white p-2 rounded-lg border border-gray-100">
+                                                <span class="text-sm text-gray-700 truncate mr-4"><i class="fas fa-file-alt mr-2 text-gray-400"></i>Document 2</span>
+                                                <a href="{{ asset('storage/' . $intervention->document_2) }}" target="_blank" class="text-blue-600 hover:text-blue-800 text-xs font-bold whitespace-nowrap">
+                                                    <i class="fas fa-download mr-1"></i> Ouvrir
+                                                </a>
+                                            </div>
+                                        @endif
+                                    </div>
                                 </div>
                             @endif
-                            <div class="relative group">
-                                <input type="file" name="document_1" id="document_1"
-                                    class="w-full pl-4 pr-10 py-3 rounded-xl border border-gray-300 focus:border-red-600 focus:ring-0 transition-all bg-gray-50 focus:bg-white text-[#111827] font-medium group-hover:bg-white">
-                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-red-500">
-                                    <i class="fas fa-file-alt"></i>
-                                </div>
-                            </div>
-                            @error('document_1')
-                                <p class="text-red-600 text-xs mt-1 font-bold">{{ $message }}</p>
-                            @enderror
-                        </div>
-                        <div>
-                            <label for="document_2" class="block text-sm font-bold text-[#111827] mb-2">Document joint 2</label>
-                            @if($intervention->document_2)
-                                <div class="mb-2 flex items-center text-xs text-blue-600">
-                                    <i class="fas fa-file-download mr-1"></i>
-                                    <a href="{{ asset('storage/' . $intervention->document_2) }}" target="_blank" class="hover:underline">Document actuel</a>
+
+                            <!-- New Documents (Multiple) -->
+                            @if($intervention->documents->count() > 0)
+                                <div class="bg-indigo-50/50 p-4 rounded-xl border border-indigo-100">
+                                    <h4 class="text-xs font-bold text-indigo-500 uppercase mb-3 px-1">Documents Enregistrés</h4>
+                                    <div class="space-y-2">
+                                        @foreach($intervention->documents as $doc)
+                                            <div class="flex items-center justify-between bg-white p-2 rounded-lg border border-indigo-50">
+                                                <span class="text-sm text-gray-700 truncate mr-4" title="{{ $doc->original_name }}">
+                                                    <i class="fas fa-file-{{ in_array($doc->file_type, ['jpg', 'jpeg', 'png']) ? 'image' : (in_array($doc->file_type, ['xls', 'xlsx']) ? 'excel' : 'pdf') }} mr-2 text-indigo-400"></i>
+                                                    {{ $doc->original_name }}
+                                                </span>
+                                                <a href="{{ asset('storage/' . $doc->file_path) }}" target="_blank" class="text-indigo-600 hover:text-indigo-800 text-xs font-bold whitespace-nowrap">
+                                                    <i class="fas fa-download mr-1"></i> Ouvrir
+                                                </a>
+                                            </div>
+                                        @endforeach
+                                    </div>
                                 </div>
                             @endif
-                            <div class="relative group">
-                                <input type="file" name="document_2" id="document_2"
-                                    class="w-full pl-4 pr-10 py-3 rounded-xl border border-gray-300 focus:border-red-600 focus:ring-0 transition-all bg-gray-50 focus:bg-white text-[#111827] font-medium group-hover:bg-white">
-                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-red-500">
-                                    <i class="fas fa-file-alt"></i>
+
+                            <!-- Add New Documents -->
+                            <div class="document-row">
+                                <label class="block text-sm font-bold text-[#111827] mb-2 flex items-center justify-between">
+                                    <span>Nouveaux documents à joindre</span>
+                                    <button type="button" onclick="addDocumentRow()" class="text-xs bg-[#111827] text-white px-2 py-1 rounded-lg hover:bg-red-600 transition-colors">
+                                        <i class="fas fa-plus mr-1"></i> Ajouter
+                                    </button>
+                                </label>
+                                <div class="relative group">
+                                    <input type="file" name="documents[]" class="w-full pl-4 pr-10 py-3 rounded-xl border border-gray-300 focus:border-red-600 focus:ring-0 transition-all bg-gray-50 focus:bg-white text-[#111827] font-medium group-hover:bg-white" accept="image/*,.pdf,.xls,.xlsx">
+                                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-red-500">
+                                        <i class="fas fa-file-upload"></i>
+                                    </div>
                                 </div>
                             </div>
-                            @error('document_2')
-                                <p class="text-red-600 text-xs mt-1 font-bold">{{ $message }}</p>
-                            @enderror
                         </div>
-                        <p class="text-xs text-gray-400 italic text-center md:text-left">Formats acceptés : PDF, JPG, PNG (Max 2Mo)</p>
-                    </div>
+                        <p class="text-[10px] text-gray-400 italic mt-6 text-center md:text-left">Max 10Mo par fichier. Formats : JPG, PNG, PDF, Excel.</p>
                 </div>
             </div>
 
@@ -337,5 +359,26 @@
             // Initialize
             updateTasks();
         });
+
+        function addDocumentRow() {
+            const container = document.getElementById('documents-container');
+            const newRow = document.createElement('div');
+            newRow.className = 'document-row mt-4 pt-4 border-t border-gray-100';
+            newRow.innerHTML = `
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-bold text-[#111827]">Nouveau document</span>
+                    <button type="button" onclick="this.closest('.document-row').remove()" class="text-[10px] text-red-600 hover:text-red-800 font-bold">
+                        <i class="fas fa-times mr-1"></i> Retirer
+                    </button>
+                </div>
+                <div class="relative group">
+                    <input type="file" name="documents[]" class="w-full pl-4 pr-10 py-3 rounded-xl border border-gray-300 focus:border-red-600 focus:ring-0 transition-all bg-gray-50 focus:bg-white text-[#111827] font-medium group-hover:bg-white" accept="image/*,.pdf,.xls,.xlsx">
+                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-red-500">
+                        <i class="fas fa-file-upload"></i>
+                    </div>
+                </div>
+            `;
+            container.appendChild(newRow);
+        }
     </script>
 @endpush

@@ -72,7 +72,7 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                 @if($intervention->statut === 'en_attente' || $intervention->statut === 'rejeter') <!-- Permettre re-validation si rejeté ? À voir workflow -->
-                                    <button onclick="openValidationModal('{{ $intervention->id }}', '{{ $intervention->reference }}', {{ var_export($intervention->date_debut === null, true) }})" 
+                                    <button onclick="openValidationModal('{{ $intervention->id }}', '{{ $intervention->reference }}', '{{ $intervention->date_debut }}', '{{ $intervention->date_fin }}')" 
                                         class="text-white bg-green-600 hover:bg-green-700 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors mr-2">
                                         <i class="fas fa-check mr-1"></i> Valider
                                     </button>
@@ -118,15 +118,30 @@
     // Pass personnel data to JS
     const availablePersonnel = @json($personnels);
 
-    function openValidationModal(interventionId, reference, needsDates) {
+    function openValidationModal(interventionId, reference, dateDebutActuelle, dateFinActuelle) {
         // Build personnel options
         let personnelOptions = '<option value="">-- Choisir un membre --</option>';
         availablePersonnel.forEach(p => {
             personnelOptions += `<option value="${p.id}">${p.name} ${p.prenom}</option>`;
         });
 
+        // Formater les dates pour l'input date (YYYY-MM-DD)
+        let formattedDebut = dateDebutActuelle ? dateDebutActuelle.substring(0, 10) : '';
+        let formattedFin = dateFinActuelle ? dateFinActuelle.substring(0, 10) : '';
+
         let htmlContent = `
             <div class="text-left">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Date de début confirmée</label>
+                        <input type="date" id="swal-date-debut" value="${formattedDebut}" class="shadow border border-gray-200 rounded-xl w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-red-500 transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Date de fin confirmée</label>
+                        <input type="date" id="swal-date-fin" value="${formattedFin}" class="shadow border border-gray-200 rounded-xl w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-red-500 transition-all">
+                    </div>
+                </div>
+
                 <div class="mb-6">
                     <label class="block text-gray-700 text-sm font-bold mb-2">Assigner au personnel technique</label>
                     <select id="swal-personnel" multiple placeholder="Rechercher et sélectionner du personnel..." autocomplete="off">
@@ -140,23 +155,8 @@
                         <option value="">-- Sélectionnez d\'abord du personnel --</option>
                     </select>
                 </div>
+            </div>
         `;
-
-        // If dates are missing, add fields for them
-        if (needsDates) {
-            htmlContent += `
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2">Date de début</label>
-                    <input type="date" id="swal-date-debut" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2">Date de fin</label>
-                    <input type="date" id="swal-date-fin" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                </div>
-            `;
-        }
-
-        htmlContent += `</div>`;
 
         Swal.fire({
             title: 'Valider l\'intervention ' + reference,
@@ -207,9 +207,8 @@
             preConfirm: () => {
                 const selectedOptions = Array.from(document.getElementById('swal-personnel').selectedOptions).map(opt => opt.value);
                 const responsibleId = document.getElementById('swal-responsible').value;
-                
-                let dateDebut = null;
-                let dateFin = null;
+                const dateDebut = document.getElementById('swal-date-debut').value;
+                const dateFin = document.getElementById('swal-date-fin').value;
 
                 if (selectedOptions.length === 0) {
                     Swal.showValidationMessage('Veuillez assigner au moins un membre du personnel');
@@ -226,18 +225,13 @@
                     return false;
                 }
 
-                if (needsDates) {
-                    dateDebut = document.getElementById('swal-date-debut').value;
-                    dateFin = document.getElementById('swal-date-fin').value;
-
-                    if (!dateDebut || !dateFin) {
-                        Swal.showValidationMessage('Les dates sont obligatoires');
-                        return false;
-                    }
-                    if (dateFin < dateDebut) {
-                        Swal.showValidationMessage('La date de fin ne peut pas être antérieure à la date de début');
-                        return false;
-                    }
+                if (!dateDebut || !dateFin) {
+                    Swal.showValidationMessage('Les dates sont obligatoires');
+                    return false;
+                }
+                if (dateFin < dateDebut) {
+                    Swal.showValidationMessage('La date de fin ne peut pas être antérieure à la date de début');
+                    return false;
                 }
 
                 return { personnel_ids: selectedOptions, responsible_id: responsibleId, date_debut: dateDebut, date_fin: dateFin };
@@ -270,19 +264,17 @@
                 responsibleInput.value = result.value.responsible_id;
                 form.appendChild(responsibleInput);
 
-                if (needsDates) {
-                    const dateDebutInput = document.createElement('input');
-                    dateDebutInput.type = 'hidden';
-                    dateDebutInput.name = 'date_debut';
-                    dateDebutInput.value = result.value.date_debut;
-                    form.appendChild(dateDebutInput);
+                const dateDebutInput = document.createElement('input');
+                dateDebutInput.type = 'hidden';
+                dateDebutInput.name = 'date_debut';
+                dateDebutInput.value = result.value.date_debut;
+                form.appendChild(dateDebutInput);
 
-                    const dateFinInput = document.createElement('input');
-                    dateFinInput.type = 'hidden';
-                    dateFinInput.name = 'date_fin';
-                    dateFinInput.value = result.value.date_fin;
-                    form.appendChild(dateFinInput);
-                }
+                const dateFinInput = document.createElement('input');
+                dateFinInput.type = 'hidden';
+                dateFinInput.name = 'date_fin';
+                dateFinInput.value = result.value.date_fin;
+                form.appendChild(dateFinInput);
 
                 document.body.appendChild(form);
                 form.submit();

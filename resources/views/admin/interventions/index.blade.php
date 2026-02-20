@@ -67,16 +67,19 @@
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8">
                 <form action="{{ route('admin.interventions.index') }}" method="GET"
                     class="grid grid-cols-1 md:grid-cols-6 gap-4 items-end">
-                    
+
                     <!-- Search Input -->
                     <div>
-                        <label for="search" class="block text-xs font-bold text-gray-500 mb-1 uppercase text-center">Recherche</label>
-                        <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Code ou Ref..."
+                        <label for="search"
+                            class="block text-xs font-bold text-gray-500 mb-1 uppercase text-center">Recherche</label>
+                        <input type="text" name="search" id="search" value="{{ request('search') }}"
+                            placeholder="Code ou Ref..."
                             class="w-full rounded-lg border-gray-200 text-sm text-center focus:border-[#111827] focus:ring-0 placeholder-gray-400">
                     </div>
                     <!-- Status Filter -->
                     <div>
-                        <label for="statut" class="block text-xs font-bold text-gray-500 mb-1 uppercase text-center">Statut</label>
+                        <label for="statut"
+                            class="block text-xs font-bold text-gray-500 mb-1 uppercase text-center">Statut</label>
                         <select name="statut" id="statut"
                             class="w-full rounded-lg border-gray-200 text-sm text-center focus:border-[#111827] focus:ring-0">
                             <option value="">Tous les statuts</option>
@@ -106,7 +109,8 @@
 
                     <!-- Date Debut Filter -->
                     <div>
-                        <label for="date_debut" class="block text-xs font-bold text-gray-500 mb-1 uppercase text-center">Date
+                        <label for="date_debut"
+                            class="block text-xs font-bold text-gray-500 mb-1 uppercase text-center">Date
                             min</label>
                         <input type="date" name="date_debut" id="date_debut" value="{{ request('date_debut') }}"
                             class="w-full rounded-lg border-gray-200 text-sm text-center focus:border-[#111827] focus:ring-0">
@@ -114,7 +118,8 @@
 
                     <!-- Date Fin Filter -->
                     <div>
-                        <label for="date_fin" class="block text-xs font-bold text-gray-500 mb-1 uppercase text-center">Date max</label>
+                        <label for="date_fin" class="block text-xs font-bold text-gray-500 mb-1 uppercase text-center">Date
+                            max</label>
                         <input type="date" name="date_fin" id="date_fin" value="{{ request('date_fin') }}"
                             class="w-full rounded-lg border-gray-200 text-sm text-center focus:border-[#111827] focus:ring-0">
                     </div>
@@ -159,8 +164,10 @@
                                 <tr class="hover:bg-gray-50 transition-colors group">
                                     <td class="px-6 py-4 whitespace-nowrap text-center">
                                         <div class="flex flex-col">
-                                            <span class="font-bold text-[#111827]">{{ $intervention->admin->name }} {{ $intervention->admin->prenom }}</span>
-                                            <span class="text-xs text-gray-500 font-mono">{{ $intervention->admin->email }}</span>
+                                            <span class="font-bold text-[#111827]">{{ $intervention->admin->name }}
+                                                {{ $intervention->admin->prenom }}</span>
+                                            <span
+                                                class="text-xs text-gray-500 font-mono">{{ $intervention->admin->email }}</span>
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center">
@@ -175,7 +182,8 @@
                                             {{ Str::limit($intervention->description, 50) }}
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-center" style="display: flex; align-items: center; justify-content: center;">
+                                    <td class="px-6 py-4 whitespace-nowrap text-center"
+                                        style="display: flex; align-items: center; justify-content: center;">
                                         @if($intervention->prestataire)
                                             <div class="flex items-center">
                                                 <div
@@ -190,8 +198,9 @@
                                             <span class="text-xs italic text-gray-400">Non assigné</span>
                                         @endif
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-center" >
-                                        <div class="flex flex-col text-sm text-gray-600" style="display: flex; align-items: center; justify-content: center;">
+                                    <td class="px-6 py-4 whitespace-nowrap text-center">
+                                        <div class="flex flex-col text-sm text-gray-600"
+                                            style="display: flex; align-items: center; justify-content: center;">
                                             <span class="flex items-center"><i
                                                     class="fas fa-calendar-alt text-gray-400 mr-2 w-4"></i>
                                                 {{ $intervention->date_debut ? \Carbon\Carbon::parse($intervention->date_debut)->format('d/m/Y') : 'N/A' }}</span>
@@ -225,13 +234,12 @@
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                                        <div
-                                            class="flex justify-center space-x-2 transition-opacity">
-                                            <!-- <a href="{{ route('admin.interventions.show', $intervention) }}"
+                                        <div class="flex justify-center space-x-2 transition-opacity">
+                                            <a href="{{ route('admin.interventions.details', $intervention->id) }}"
                                                 class="text-blue-600 hover:text-blue-900 p-2 hover:bg-blue-50 rounded-lg transition-colors"
-                                                title="Voir">
+                                                title="Détails">
                                                 <i class="fas fa-eye"></i>
-                                            </a> -->
+                                            </a>
                                             <a href="{{ route('admin.interventions.edit', $intervention) }}"
                                                 class="text-yellow-600 hover:text-yellow-900 p-2 hover:bg-yellow-50 rounded-lg transition-colors"
                                                 title="Modifier">

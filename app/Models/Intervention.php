@@ -95,4 +95,9 @@ class Intervention extends Model
         return $this->belongsToMany(ForfaitTask::class, 'intervention_forfait_task')
             ->withTimestamps();
     }
+
+    public function documents()
+    {
+        return $this->hasMany(InterventionDocument::class);
+    }
 }

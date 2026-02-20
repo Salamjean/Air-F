@@ -76,8 +76,8 @@ class AdminIntervention extends Controller
             'forfait_task_ids' => 'nullable|array',
             'forfait_task_ids.*' => 'exists:forfait_tasks,id',
             'montant' => 'nullable|numeric',
-            'document_1' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-            'document_2' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'documents' => 'nullable|array',
+            'documents.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png,xls,xlsx|max:10240',
         ], [
             'code.required' => 'Le code est requis',
             'code.unique' => 'Le code existe déjà',
@@ -112,15 +112,19 @@ class AdminIntervention extends Controller
                 $intervention->montant = $request->montant;
             }
 
-            // Handle file uploads
-            if ($request->hasFile('document_1')) {
-                $intervention->document_1 = $request->file('document_1')->store('interventions/documents', 'public');
-            }
-            if ($request->hasFile('document_2')) {
-                $intervention->document_2 = $request->file('document_2')->store('interventions/documents', 'public');
-            }
-
             $intervention->save();
+
+            // Handle multiple file uploads
+            if ($request->hasFile('documents')) {
+                foreach ($request->file('documents') as $file) {
+                    $path = $file->store('interventions/documents', 'public');
+                    $intervention->documents()->create([
+                        'file_path' => $path,
+                        'original_name' => $file->getClientOriginalName(),
+                        'file_type' => $file->getClientOriginalExtension(),
+                    ]);
+                }
+            }
 
             // Sync forfait tasks
             if ($request->has('forfait_task_ids')) {
@@ -164,8 +168,8 @@ class AdminIntervention extends Controller
             'forfait_task_ids' => 'nullable|array',
             'forfait_task_ids.*' => 'exists:forfait_tasks,id',
             'montant' => 'nullable|numeric',
-            'document_1' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-            'document_2' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'documents' => 'nullable|array',
+            'documents.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png,xls,xlsx|max:10240',
         ], [
             'code.required' => 'Le code est requis',
             'code.unique' => 'Le code existe déjà',
@@ -196,14 +200,6 @@ class AdminIntervention extends Controller
                 $intervention->montant = $forfait->price;
             }
 
-            // Handle file uploads
-            if ($request->hasFile('document_1')) {
-                $intervention->document_1 = $request->file('document_1')->store('interventions/documents', 'public');
-            }
-            if ($request->hasFile('document_2')) {
-                $intervention->document_2 = $request->file('document_2')->store('interventions/documents', 'public');
-            }
-
             // Reset status if it was rejected
             if ($intervention->statut === 'rejeter') {
                 $intervention->statut = 'en_attente';
@@ -212,6 +208,18 @@ class AdminIntervention extends Controller
             }
 
             $intervention->save();
+
+            // Handle multiple file uploads
+            if ($request->hasFile('documents')) {
+                foreach ($request->file('documents') as $file) {
+                    $path = $file->store('interventions/documents', 'public');
+                    $intervention->documents()->create([
+                        'file_path' => $path,
+                        'original_name' => $file->getClientOriginalName(),
+                        'file_type' => $file->getClientOriginalExtension(),
+                    ]);
+                }
+            }
 
             // Sync forfait tasks
             if ($request->has('forfait_task_ids')) {

@@ -70,7 +70,7 @@
                     </div>
                     <div>
                         <h3 class="text-3xl font-black text-gray-900">{{ $stats['equipements'] }}</h3>
-                        <p class="text-sm font-medium text-gray-500 mt-1">Équipements Référencés</p>
+                        <p class="text-sm font-medium text-gray-500 mt-1">Consommables Référencés</p>
                     </div>
                 </div>
             </div>
@@ -211,26 +211,28 @@
                 </div>
                 <div class="space-y-6">
                     @forelse($recentInterventions as $intervention)
-                        <div class="flex gap-4 group cursor-default">
+                        <a href="{{ route('admin.interventions.details', $intervention->id) }}"
+                            class="flex gap-4 group cursor-pointer hover:bg-gray-50 p-2 rounded-xl transition-all">
                             <div class="relative">
                                 <div
-                                    class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-xs font-bold z-10 relative">
+                                    class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-xs font-bold z-10 relative group-hover:bg-blue-600 group-hover:text-white transition-colors">
                                     <i class="fas fa-file-invoice"></i>
                                 </div>
                                 @if(!$loop->last)
                                     <div class="absolute top-10 left-1/2 -translate-x-1/2 w-0.5 h-10 bg-gray-50"></div>
                                 @endif
                             </div>
-                            <div class="flex-1 pb-4">
+                            <div class="flex-1">
                                 <div class="flex items-center justify-between">
                                     <p class="text-sm font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
-                                        {{ $intervention->reference }}</p>
+                                        {{ $intervention->reference }}
+                                    </p>
                                     <span
                                         class="text-[10px] text-gray-400">{{ $intervention->created_at->diffForHumans() }}</span>
                                 </div>
                                 <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">{{ $intervention->libelle }}</p>
                             </div>
-                        </div>
+                        </a>
                     @empty
                         <div class="text-center py-10">
                             <p class="text-sm text-gray-400">Aucune activité récente</p>

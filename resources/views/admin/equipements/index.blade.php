@@ -80,21 +80,21 @@
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-gray-50 border-b border-gray-200">
-                        <th class="px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wider">Image</th>
-                        <th class="px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wider">Désignation</th>
-                        <th class="px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wider">Catégorie</th>
-                        <th class="px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wider">Site(s)</th>
+                        <!-- <th class="px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wider">Image</th> -->
+                        <th class="px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wider text-center">Désignation</th>
+                        <th class="px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wider text-center">Catégorie</th>
+                        <th class="px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wider text-center">Site(s)</th>
                         <th class="px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wider text-center">En
                             Stock</th>
-                        <th class="px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wider">Ajouté par</th>
-                        <th class="px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wider text-right">
+                        <th class="px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wider text-center">Ajouté par</th>
+                        <th class="px-6 py-4 text-sm font-semibold text-gray-600 uppercase tracking-wider text-center">
                             Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
                     @forelse($equipements as $equipement)
                         <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <!-- <td class="px-6 py-4 whitespace-nowrap">
                                 @if($equipement->image)
                                     <img src="{{ asset('storage/' . $equipement->image) }}" alt="{{ $equipement->name }}"
                                         class="w-12 h-12 object-cover rounded-lg border border-gray-100">
@@ -103,10 +103,10 @@
                                         <i class="fas fa-tools text-xl"></i>
                                     </div>
                                 @endif
-                            </td>
-                            <td class="px-6 py-4">
+                            </td> -->
+                            <td class="px-6 py-4 text-center">
                                 <div class="text-sm font-bold text-gray-900">{{ $equipement->name }}</div>
-                                <div class="flex flex-wrap gap-2 mt-1">
+                                <div class="flex flex-wrap gap-2 mt-1" style="display:flex; justify-content: center;">
                                     @if($equipement->longueur)
                                         <span
                                             class="text-[10px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded border border-blue-100 font-medium">
@@ -130,12 +130,12 @@
                                     <div class="text-xs text-gray-500 truncate max-w-xs mt-1">{{ $equipement->description }}</div>
                                 @endif
                             </td>
-                            <td class="px-6 py-4">
+                            <td class="px-6 py-4 text-center">
                                 <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-semibold">
                                     {{ $equipement->category->name }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4">
+                            <td class="px-6 py-4 text-center">
                                 @forelse($equipement->sites as $site)
                                     <span
                                         class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 mb-1 mr-1">
@@ -157,13 +157,13 @@
                                     @endif
                                 </div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td class="px-6 py-4 text-center">
                                 <div class="text-xs text-gray-600 font-medium">{{ $equipement->creator->name ?? 'N/A' }}
                                     {{ $equipement->creator->prenom ?? '' }}
                                 </div>
                                 <div class="text-[10px] text-gray-400">{{ $equipement->created_at->format('d/m/Y H:i') }}</div>
                             </td>
-                            <td class="px-6 py-4 text-right">
+                            <td class="px-6 py-4 text-center" style="display:flex; justify-content: center;">
                                 <div class="flex justify-end space-x-2">
                                     <button type="button"
                                         onclick="openRechargeModal({{ $equipement->id }}, '{{ $equipement->name }}', '{{ $equipement->unit }}')"
@@ -189,7 +189,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-12 text-center">
+                            <td colspan="5" class="px-6 py-12 text-center">
                                 <div class="flex flex-col items-center">
                                     <div class="bg-gray-50 rounded-full p-4 mb-4">
                                         <i class="fas fa-box-open text-gray-300 text-4xl"></i>

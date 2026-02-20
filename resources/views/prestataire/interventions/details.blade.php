@@ -246,43 +246,43 @@
 
                 <!-- Informations Financières (Devis et Facture) -->
                 @if ($intervention->montant_estimatif > 0 || $intervention->devis_path || $intervention->montant > 0 || $intervention->facture_path)
-                        <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
-                            <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                                <i class="fas fa-file-invoice-dollar text-gray-400"></i>
-                                Informations Financières
-                            </h3>
+                    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
+                        <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                            <i class="fas fa-file-invoice-dollar text-gray-400"></i>
+                            Informations Financières
+                        </h3>
 
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <!-- Section Devis (Estimation) -->
-                                @if ($intervention->montant_estimatif > 0 || $intervention->devis_path)
-                                        <div class="bg-blue-50/50 rounded-2xl p-5 border border-blue-100/50">
-                                            <span class="block text-[10px] uppercase font-bold text-blue-400 tracking-wider mb-3">Estimation
-                                                Initiale (Devis)</span>
-                                            <div class="flex items-center gap-4">
-                                                <div
-                                                    class="w-10 h-10 rounded-xl bg-blue-500 text-white flex items-center justify-center shadow-md">
-                                                    <i class="fas fa-calculator text-sm"></i>
-                                                </div>
-                                                <div>
-                                                    <span class="block text-lg font-bold text-gray-900">
-                                                        {{ number_format($intervention->montant_estimatif, 0, ',', ' ') }} EURO
-                                                    </span>
-                                                    @if ($intervention->devis_path)
-                                                        <a href="{{ Storage::url($intervention->devis_path) }}" target="_blank"
-                                                            class="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 hover:text-blue-700 mt-1">
-                                                            <i class="fas fa-download"></i> Voir le devis
-                                                        </a>
-                                                    @endif
-                                                </div>
-                                            </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Section Devis (Estimation) -->
+                            @if ($intervention->montant_estimatif > 0 || $intervention->devis_path)
+                                <div class="bg-blue-50/50 rounded-2xl p-5 border border-blue-100/50">
+                                    <span class="block text-[10px] uppercase font-bold text-blue-400 tracking-wider mb-3">Estimation
+                                        Initiale (Devis)</span>
+                                    <div class="flex items-center gap-4">
+                                        <div
+                                            class="w-10 h-10 rounded-xl bg-blue-500 text-white flex items-center justify-center shadow-md">
+                                            <i class="fas fa-calculator text-sm"></i>
+                                        </div>
+                                        <div>
+                                            <span class="block text-lg font-bold text-gray-900">
+                                                {{ number_format($intervention->montant_estimatif, 0, ',', ' ') }} EURO
+                                            </span>
+                                            @if ($intervention->devis_path)
+                                                <a href="{{ Storage::url($intervention->devis_path) }}" target="_blank"
+                                                    class="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 hover:text-blue-700 mt-1">
+                                                    <i class="fas fa-download"></i> Voir le devis
+                                                </a>
+                                            @endif
                                         </div>
                                     </div>
-                                @endif
+                                </div>
+                            @endif
 
                             <!-- Section Facture Finale -->
                             @if ($intervention->facture_path || ($intervention->statut === 'accord' || $intervention->statut === 'payer'))
                                 <div class="bg-emerald-50/50 rounded-2xl p-5 border border-emerald-100/50">
-                                    <span class="block text-[10px] uppercase font-bold text-emerald-400 tracking-wider mb-3">Facturation
+                                    <span
+                                        class="block text-[10px] uppercase font-bold text-emerald-400 tracking-wider mb-3">Facturation
                                         Finale</span>
                                     <div class="flex items-center gap-4">
                                         <div
@@ -303,7 +303,6 @@
                                     </div>
                                 </div>
                             @elseif($intervention->montant > 0 && !$intervention->facture_path && $intervention->statut === 'devis')
-                                <!-- Cas particulier: montant initial sans facture encore soumise -->
                                 <div class="bg-emerald-50/50 rounded-2xl p-5 border border-emerald-100/50 opacity-60">
                                     <span class="block text-[10px] uppercase font-bold text-emerald-400 tracking-wider mb-2">Montant
                                         Final Prévu</span>
@@ -316,56 +315,147 @@
                         </div>
                     </div>
                 @endif
-        </div>
 
-        <!-- Right Column: Sidebar -->
-        <div class="space-y-8">
-            <!-- Actors Card -->
-            <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="p-6 border-b border-gray-100 bg-gray-50/50">
-                    <h3 class="font-bold text-gray-900 text-lg">Acteurs Impliqués</h3>
-                </div>
+                <!-- Documents Joints Section -->
+                @if($intervention->document_1 || $intervention->document_2 || $intervention->documents->count() > 0)
+                    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
+                        <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                            <i class="fas fa-paperclip text-blue-500"></i>
+                            Documents Joints pour l'intervention
+                        </h3>
 
-                <div class="p-6 space-y-8">
-                    <!-- Personnel -->
-                    <div>
-                        <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-4">Personnel
-                            Technique</span>
-                        @if($intervention->personnels->count() > 0)
-                            @foreach($intervention->personnels as $personnel)
-                                <div class="flex items-start gap-4 mb-4 last:mb-0">
-                                    <div
-                                        class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 text-white flex items-center justify-center shadow-md">
-                                        <span class="font-bold text-lg">{{ substr($personnel->name, 0, 1) }}</span>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-bold text-gray-900">
-                                            {{ $personnel->name }} {{ $personnel->prenom }}
-                                            @if($personnel->pivot->is_responsible)
-                                                <span
-                                                    class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-amber-100 text-amber-800 ml-2">
-                                                    <i class="fas fa-crown mr-1"></i> Chef d'équipe
-                                                </span>
-                                            @endif
-                                        </h4>
-                                        <div class="text-sm text-gray-500 space-y-1 mt-1">
-                                            <p><i class="fas fa-envelope mr-2 w-4 text-center"></i>{{ $personnel->email }}</p>
-                                            <p><i class="fas fa-phone mr-2 w-4 text-center"></i>{{ $personnel->contact }}</p>
-                                        </div>
-                                    </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            @if($intervention->document_1)
+                                @php
+                                    $ext1 = pathinfo($intervention->document_1, PATHINFO_EXTENSION);
+                                    $isImg1 = in_array(strtolower($ext1), ['jpg', 'jpeg', 'png', 'gif', 'webp']);
+                                @endphp
+                                <div class="bg-blue-50/30 rounded-2xl p-4 border border-blue-100">
+                                    <span class="block text-[10px] uppercase font-bold text-blue-400 tracking-wider mb-2">Document
+                                        1</span>
+                                    @if($isImg1)
+                                        <a href="{{ asset('storage/' . $intervention->document_1) }}" target="_blank"
+                                            class="block group">
+                                            <div class="relative rounded-xl overflow-hidden border border-blue-200 aspect-video">
+                                                <img src="{{ asset('storage/' . $intervention->document_1) }}"
+                                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                            </div>
+                                        </a>
+                                    @else
+                                        <a href="{{ asset('storage/' . $intervention->document_1) }}" target="_blank"
+                                            class="flex items-center gap-3 p-3 bg-white rounded-xl border border-blue-100 hover:shadow-md transition-all group">
+                                            <i class="fas fa-file-alt text-blue-500"></i>
+                                            <span class="text-sm font-bold text-gray-700 truncate">Document 1</span>
+                                        </a>
+                                    @endif
+                                </div>
+                            @endif
+
+                            @if($intervention->document_2)
+                                @php
+                                    $ext2 = pathinfo($intervention->document_2, PATHINFO_EXTENSION);
+                                    $isImg2 = in_array(strtolower($ext2), ['jpg', 'jpeg', 'png', 'gif', 'webp']);
+                                @endphp
+                                <div class="bg-blue-50/30 rounded-2xl p-4 border border-blue-100">
+                                    <span class="block text-[10px] uppercase font-bold text-blue-400 tracking-wider mb-2">Document
+                                        2</span>
+                                    @if($isImg2)
+                                        <a href="{{ asset('storage/' . $intervention->document_2) }}" target="_blank"
+                                            class="block group">
+                                            <div class="relative rounded-xl overflow-hidden border border-blue-200 aspect-video">
+                                                <img src="{{ asset('storage/' . $intervention->document_2) }}"
+                                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                            </div>
+                                        </a>
+                                    @else
+                                        <a href="{{ asset('storage/' . $intervention->document_2) }}" target="_blank"
+                                            class="flex items-center gap-3 p-3 bg-white rounded-xl border border-blue-100 hover:shadow-md transition-all group">
+                                            <i class="fas fa-file-alt text-blue-500"></i>
+                                            <span class="text-sm font-bold text-gray-700 truncate">Document 2</span>
+                                        </a>
+                                    @endif
+                                </div>
+                            @endif
+
+                            @foreach($intervention->documents as $doc)
+                                @php
+                                    $ext = strtolower($doc->file_type);
+                                    $isImg = in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
+                                    $icon = in_array($ext, ['xls', 'xlsx']) ? 'file-excel text-green-600' : (in_array($ext, ['pdf']) ? 'file-pdf text-red-500' : 'file-alt text-blue-500');
+                                @endphp
+                                <div class="bg-indigo-50/30 rounded-2xl p-4 border border-indigo-100">
+                                    <span class="block text-[10px] uppercase font-bold text-indigo-400 tracking-wider mb-2">Document
+                                        Joint</span>
+                                    @if($isImg)
+                                        <a href="{{ asset('storage/' . $doc->file_path) }}" target="_blank" class="block group">
+                                            <div class="relative rounded-xl overflow-hidden border border-indigo-200 aspect-video">
+                                                <img src="{{ asset('storage/' . $doc->file_path) }}"
+                                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                            </div>
+                                        </a>
+                                    @else
+                                        <a href="{{ asset('storage/' . $doc->file_path) }}" target="_blank"
+                                            class="flex items-center gap-3 p-3 bg-white rounded-xl border border-indigo-100 hover:shadow-md transition-all group">
+                                            <i class="fas fa-{{ $icon }}"></i>
+                                            <span class="text-sm font-bold text-gray-700 truncate"
+                                                title="{{ $doc->original_name }}">{{ $doc->original_name }}</span>
+                                        </a>
+                                    @endif
                                 </div>
                             @endforeach
-                        @else
-                            <div
-                                class="p-4 bg-yellow-50 text-yellow-800 rounded-xl border border-yellow-100 flex items-center gap-3">
-                                <i class="fas fa-exclamation-triangle text-xl"></i>
-                                <span class="font-medium text-sm">Non assigné</span>
-                            </div>
-                        @endif
+                        </div>
+                    </div>
+                @endif
+            </div>
+
+            <!-- Right Column: Sidebar -->
+            <div class="space-y-8">
+                <!-- Actors Card -->
+                <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="p-6 border-b border-gray-100 bg-gray-50/50">
+                        <h3 class="font-bold text-gray-900 text-lg">Acteurs Impliqués</h3>
+                    </div>
+
+                    <div class="p-6 space-y-8">
+                        <!-- Personnel -->
+                        <div>
+                            <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-4">Personnel
+                                Technique</span>
+                            @if($intervention->personnels->count() > 0)
+                                @foreach($intervention->personnels as $personnel)
+                                    <div class="flex items-start gap-4 mb-4 last:mb-0">
+                                        <div
+                                            class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 text-white flex items-center justify-center shadow-md">
+                                            <span class="font-bold text-lg">{{ substr($personnel->name, 0, 1) }}</span>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-bold text-gray-900">
+                                                {{ $personnel->name }} {{ $personnel->prenom }}
+                                                @if($personnel->pivot->is_responsible)
+                                                    <span
+                                                        class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-amber-100 text-amber-800 ml-2">
+                                                        <i class="fas fa-crown mr-1"></i> Chef d'équipe
+                                                    </span>
+                                                @endif
+                                            </h4>
+                                            <div class="text-sm text-gray-500 space-y-1 mt-1">
+                                                <p><i class="fas fa-envelope mr-2 w-4 text-center"></i>{{ $personnel->email }}</p>
+                                                <p><i class="fas fa-phone mr-2 w-4 text-center"></i>{{ $personnel->contact }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @else
+                                <div
+                                    class="p-4 bg-yellow-50 text-yellow-800 rounded-xl border border-yellow-100 flex items-center gap-3">
+                                    <i class="fas fa-exclamation-triangle text-xl"></i>
+                                    <span class="font-medium text-sm">Non assigné</span>
+                                </div>
+                            @endif
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
     </div>
 @endsection

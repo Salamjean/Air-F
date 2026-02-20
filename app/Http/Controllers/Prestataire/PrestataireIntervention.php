@@ -31,17 +31,13 @@ class PrestataireIntervention extends Controller
             'personnel_ids' => 'required|array',
             'personnel_ids.*' => 'exists:users,id',
             'responsible_id' => 'required|exists:users,id',
+            'date_debut' => 'required|date',
+            'date_fin' => 'required|date|after_or_equal:date_debut',
         ];
 
         // Ensure responsible_id is in personnel_ids
         if (!in_array($request->responsible_id, $request->personnel_ids)) {
             return back()->with('error', 'Le responsable doit faire partie du personnel assigné.');
-        }
-
-        // If dates are not already set, they are required
-        if (is_null($intervention->date_debut) || is_null($intervention->date_fin)) {
-            $rules['date_debut'] = 'required|date';
-            $rules['date_fin'] = 'required|date|after_or_equal:date_debut';
         }
 
         $request->validate($rules);
@@ -57,10 +53,8 @@ class PrestataireIntervention extends Controller
 
             $intervention->personnels()->sync($syncData);
 
-            if (is_null($intervention->date_debut) || is_null($intervention->date_fin)) {
-                $intervention->date_debut = $request->date_debut;
-                $intervention->date_fin = $request->date_fin;
-            }
+            $intervention->date_debut = $request->date_debut;
+            $intervention->date_fin = $request->date_fin;
 
             $intervention->statut = 'confirmer'; // Ou 'traiter' selon le workflow exact
             $intervention->save();

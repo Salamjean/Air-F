@@ -287,7 +287,6 @@
                 </div>
                 @endif
 
-                @if($intervention->document_1 || $intervention->document_2)
                 <!-- Documents de Demande -->
                 <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
                     <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
@@ -295,29 +294,30 @@
                         Documents Joints à la Demande
                     </h3>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Legacy Documents -->
                         @if($intervention->document_1)
                             @php
                                 $ext1 = pathinfo($intervention->document_1, PATHINFO_EXTENSION);
                                 $isImg1 = in_array(strtolower($ext1), ['jpg', 'jpeg', 'png', 'gif', 'webp']);
                             @endphp
                             <div class="bg-blue-50/30 rounded-2xl p-4 border border-blue-100">
-                                <span class="block text-xs uppercase font-bold text-blue-400 tracking-wider mb-3">Document 1</span>
+                                <span class="block text-xs uppercase font-bold text-blue-400 tracking-wider mb-3">Document Hérité 1</span>
                                 @if($isImg1)
                                     <a href="{{ asset('storage/' . $intervention->document_1) }}" target="_blank" class="block group">
-                                        <div class="relative rounded-xl overflow-hidden border border-blue-200">
-                                            <img src="{{ asset('storage/' . $intervention->document_1) }}" class="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-500">
+                                        <div class="relative rounded-xl overflow-hidden border border-blue-200 aspect-video">
+                                            <img src="{{ asset('storage/' . $intervention->document_1) }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                                             <div class="absolute inset-0 bg-blue-900/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
                                                 <i class="fas fa-search-plus text-xl"></i>
                                             </div>
                                         </div>
                                     </a>
                                 @else
-                                    <a href="{{ asset('storage/' . $intervention->document_1) }}" target="_blank" class="flex items-center gap-3 p-3 bg-white rounded-xl border border-blue-100 hover:shadow-md transition-all group">
+                                    <a href="{{ asset('storage/' . $intervention->document_1) }}" target="_blank" class="flex items-center gap-3 p-3 bg-white rounded-xl border border-blue-100 hover:shadow-md transition-all group h-full">
                                         <div class="w-10 h-10 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all">
-                                            <i class="fas fa-file-pdf"></i>
+                                            <i class="fas fa-file-alt"></i>
                                         </div>
-                                        <span class="text-sm font-bold text-gray-700 truncate">Voir le document</span>
+                                        <span class="text-sm font-bold text-gray-700 truncate">Document 1</span>
                                     </a>
                                 @endif
                             </div>
@@ -329,29 +329,64 @@
                                 $isImg2 = in_array(strtolower($ext2), ['jpg', 'jpeg', 'png', 'gif', 'webp']);
                             @endphp
                             <div class="bg-blue-50/30 rounded-2xl p-4 border border-blue-100">
-                                <span class="block text-xs uppercase font-bold text-blue-400 tracking-wider mb-3">Document 2</span>
+                                <span class="block text-xs uppercase font-bold text-blue-400 tracking-wider mb-3">Document Hérité 2</span>
                                 @if($isImg2)
                                     <a href="{{ asset('storage/' . $intervention->document_2) }}" target="_blank" class="block group">
-                                        <div class="relative rounded-xl overflow-hidden border border-blue-200">
-                                            <img src="{{ asset('storage/' . $intervention->document_2) }}" class="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-500">
+                                        <div class="relative rounded-xl overflow-hidden border border-blue-200 aspect-video">
+                                            <img src="{{ asset('storage/' . $intervention->document_2) }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                                             <div class="absolute inset-0 bg-blue-900/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
                                                 <i class="fas fa-search-plus text-xl"></i>
                                             </div>
                                         </div>
                                     </a>
                                 @else
-                                    <a href="{{ asset('storage/' . $intervention->document_2) }}" target="_blank" class="flex items-center gap-3 p-3 bg-white rounded-xl border border-blue-100 hover:shadow-md transition-all group">
+                                    <a href="{{ asset('storage/' . $intervention->document_2) }}" target="_blank" class="flex items-center gap-3 p-3 bg-white rounded-xl border border-blue-100 hover:shadow-md transition-all group h-full">
                                         <div class="w-10 h-10 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all">
-                                            <i class="fas fa-file-pdf"></i>
+                                            <i class="fas fa-file-alt"></i>
                                         </div>
-                                        <span class="text-sm font-bold text-gray-700 truncate">Voir le document</span>
+                                        <span class="text-sm font-bold text-gray-700 truncate">Document 2</span>
                                     </a>
                                 @endif
                             </div>
                         @endif
+
+                        <!-- Multiple Documents -->
+                        @foreach($intervention->documents as $doc)
+                            @php
+                                $ext = strtolower($doc->file_type);
+                                $isImg = in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
+                                $icon = in_array($ext, ['xls', 'xlsx']) ? 'file-excel text-green-600' : (in_array($ext, ['pdf']) ? 'file-pdf text-red-500' : 'file-alt text-blue-500');
+                            @endphp
+                            <div class="bg-indigo-50/30 rounded-2xl p-4 border border-indigo-100">
+                                <span class="block text-xs uppercase font-bold text-indigo-400 tracking-wider mb-3">Document Joint</span>
+                                @if($isImg)
+                                    <a href="{{ asset('storage/' . $doc->file_path) }}" target="_blank" class="block group">
+                                        <div class="relative rounded-xl overflow-hidden border border-indigo-200 aspect-video">
+                                            <img src="{{ asset('storage/' . $doc->file_path) }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                            <div class="absolute inset-0 bg-indigo-900/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
+                                                <i class="fas fa-search-plus text-xl"></i>
+                                            </div>
+                                        </div>
+                                    </a>
+                                @else
+                                    <a href="{{ asset('storage/' . $doc->file_path) }}" target="_blank" class="flex items-center gap-3 p-3 bg-white rounded-xl border border-indigo-100 hover:shadow-md transition-all group h-full">
+                                        <div class="w-10 h-10 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-all">
+                                            <i class="fas fa-{{ $icon }}"></i>
+                                        </div>
+                                        <span class="text-sm font-bold text-gray-700 truncate" title="{{ $doc->original_name }}">{{ $doc->original_name }}</span>
+                                    </a>
+                                @endif
+                            </div>
+                        @endforeach
+
+                        @if(!$intervention->document_1 && !$intervention->document_2 && $intervention->documents->count() === 0)
+                            <div class="col-span-full py-8 text-center bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+                                <i class="fas fa-folder-open text-gray-300 text-4xl mb-3 block"></i>
+                                <span class="text-gray-400 font-medium">Aucun document joint à cette demande.</span>
+                            </div>
+                        @endif
                     </div>
                 </div>
-                @endif
 
                 @if($intervention->equipements->count() > 0)
                 <!-- Matériels Utilisés -->
