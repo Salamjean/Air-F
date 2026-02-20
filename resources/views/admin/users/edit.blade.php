@@ -55,6 +55,7 @@
                                     <select name="role" id="role" onchange="toggleFields()"
                                         class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-red-500 transition-all outline-none text-gray-700 appearance-none">
                                         <option value="responsable" {{ old('role', $user->role) == 'responsable' ? 'selected' : '' }}>Responsable AF</option>
+                                        <option value="collegue" {{ old('role', $user->role) == 'collegue' ? 'selected' : '' }}>Collègue</option>
                                         <option value="prestataire" {{ old('role', $user->role) == 'prestataire' ? 'selected' : '' }}>Prestataire</option>
                                         <option value="finance" {{ old('role', $user->role) == 'finance' ? 'selected' : '' }}>
                                             Financier</option>

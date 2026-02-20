@@ -55,9 +55,10 @@
                                 <h3 class="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
                                     {{ $intervention->reference }}
                                 </h3>
-                                <span class="text-xs font-mono text-gray-500 bg-gray-100 px-2 py-1 rounded mt-1 inline-block">
-                                    {{ $intervention->code }}
-                                </span>
+                                <div class="flex items-center gap-1.5 text-xs font-bold text-gray-500 mt-1">
+                                    <i class="fas fa-map-marker-alt text-red-500"></i>
+                                    {{ $intervention->site->name ?? 'N/A' }}
+                                </div>
                             </div>
                             <span
                                 class="px-3 py-1 bg-white text-gray-700 text-[10px] font-bold uppercase tracking-wide rounded-full border border-gray-100 flex items-center gap-1 shadow-sm">

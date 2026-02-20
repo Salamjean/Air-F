@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class AdminMiddleware
+class SuperAdminMiddleware
 {
     /**
      * Handle an incoming request.
@@ -16,15 +16,10 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::guard('user')->check() && (Auth::guard('user')->user()->role === 'admin' || Auth::guard('user')->user()->role === 'collegue')) {
+        if (Auth::guard('user')->check() && Auth::guard('user')->user()->role === 'admin') {
             return $next($request);
         }
 
-        // If logged in but not admin, log them out or just deny access
-        if (Auth::guard('user')->check()) {
-            Auth::guard('user')->logout();
-        }
-
-        return redirect()->route('user.login')->with('error', 'Accès réservé aux administrateurs.');
+        return redirect()->route('admin.dashboard')->with('error', 'Vous n\'avez pas les permissions nécessaires pour accéder à cette section.');
     }
 }

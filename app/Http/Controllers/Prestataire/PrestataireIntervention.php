@@ -13,7 +13,7 @@ class PrestataireIntervention extends Controller
     public function index()
     {
         $interventions = Intervention::where('prestataire_id', auth('user')->id())
-            ->with(['personnels', 'prestataire'])
+            ->with(['personnels', 'prestataire', 'site'])
             ->latest()
             ->get();
 
@@ -96,7 +96,7 @@ class PrestataireIntervention extends Controller
     public function enAttente(Request $request)
     {
         $query = Intervention::where('prestataire_id', auth('user')->id())
-            ->where('statut', 'en_attente')->with(['personnels', 'prestataire']);
+            ->where('statut', 'en_attente')->with(['personnels', 'prestataire', 'site']);
 
         if ($request->has('search')) {
             $search = $request->input('search');
@@ -119,7 +119,7 @@ class PrestataireIntervention extends Controller
     public function valider(Request $request)
     {
         $query = Intervention::where('prestataire_id', auth('user')->id())
-            ->where('statut', 'confirmer')->with(['personnels', 'prestataire']);
+            ->where('statut', 'confirmer')->with(['personnels', 'prestataire', 'site']);
 
         if ($request->has('search')) {
             $search = $request->input('search');
@@ -138,7 +138,7 @@ class PrestataireIntervention extends Controller
     public function facturees(Request $request)
     {
         $query = Intervention::where('prestataire_id', auth('user')->id())
-            ->where('statut', 'facture')->with(['personnels', 'prestataire']);
+            ->where('statut', 'facture')->with(['personnels', 'prestataire', 'site']);
 
         if ($request->has('search')) {
             $search = $request->input('search');
@@ -157,7 +157,7 @@ class PrestataireIntervention extends Controller
     public function accordees(Request $request)
     {
         $query = Intervention::where('prestataire_id', auth('user')->id())
-            ->where('statut', 'accord')->with(['personnels', 'prestataire']);
+            ->where('statut', 'accord')->with(['personnels', 'prestataire', 'site']);
 
         if ($request->has('search')) {
             $search = $request->input('search');
@@ -176,7 +176,7 @@ class PrestataireIntervention extends Controller
     public function finance(Request $request)
     {
         $query = Intervention::where('prestataire_id', auth('user')->id())
-            ->where('statut', 'finance')->with(['personnels', 'prestataire']);
+            ->where('statut', 'finance')->with(['personnels', 'prestataire', 'site']);
 
         if ($request->has('search')) {
             $search = $request->input('search');
@@ -195,7 +195,7 @@ class PrestataireIntervention extends Controller
     public function rejeter(Request $request)
     {
         $query = Intervention::where('prestataire_id', auth('user')->id())
-            ->where('statut', 'rejeter')->with(['personnels', 'prestataire']);
+            ->where('statut', 'rejeter')->with(['personnels', 'prestataire', 'site']);
 
         if ($request->has('search')) {
             $search = $request->input('search');
@@ -217,13 +217,13 @@ class PrestataireIntervention extends Controller
             return back()->with('error', 'Action non autorisée.');
         }
 
-        $intervention->load(['personnels', 'prestataire']);
+        $intervention->load(['personnels', 'prestataire', 'site']);
         return view('prestataire.interventions.details', compact('intervention'));
     }
     public function devisAttente(Request $request)
     {
         $query = Intervention::with('equipements')->where('prestataire_id', auth('user')->id())
-            ->where('statut', 'traiter')->with(['personnels', 'prestataire']);
+            ->where('statut', 'traiter')->with(['personnels', 'prestataire', 'site']);
 
         if ($request->has('search')) {
             $search = $request->input('search');
@@ -247,7 +247,7 @@ class PrestataireIntervention extends Controller
                 $q->where('montant_estimatif', '>', 0)
                     ->orWhereNotNull('devis_path');
             })
-            ->with(['personnels', 'prestataire']);
+            ->with(['personnels', 'prestataire', 'site']);
 
         if ($request->has('search')) {
             $search = $request->input('search');
@@ -345,7 +345,7 @@ class PrestataireIntervention extends Controller
     public function historique(Request $request)
     {
         $query = Intervention::where('prestataire_id', auth('user')->id())
-            ->where('statut', 'payer')->with(['personnels']);
+            ->where('statut', 'payer')->with(['personnels', 'site']);
 
         if ($request->has('search')) {
             $search = $request->input('search');

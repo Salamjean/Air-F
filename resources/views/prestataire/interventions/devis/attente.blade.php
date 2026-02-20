@@ -30,9 +30,10 @@
                     <thead>
                         <tr
                             class="bg-yellow-50/50 border-b border-gray-100 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                            <th class="px-6 py-4">Code</th>
+                            <!-- <th class="px-6 py-4">Code</th> -->
                             <th class="px-6 py-4">Référence</th>
                             <th class="px-6 py-4">Libellé</th>
+                            <th class="px-6 py-4">Site</th>
                             <th class="px-6 py-4">Période</th>
                             <th class="px-6 py-4">Statut</th>
                             <th class="px-6 py-4 text-center">Actions</th>
@@ -43,14 +44,14 @@
                             <tr class="hover:bg-gray-50 transition-colors duration-200 group">
                                 <td class="px-6 py-4">
                                     <span class="text-sm font-bold text-gray-900 group-hover:text-yellow-600 transition-colors">
-                                        {{ $intervention->code }}
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <span class="text-xs font-mono text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
                                         {{ $intervention->reference }}
                                     </span>
                                 </td>
+                                <!-- <td class="px-6 py-4">
+                                    <span class="text-xs font-mono text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
+                                        {{ $intervention->reference }}
+                                    </span>
+                                </td> -->
                                 <td class="px-6 py-4 max-w-xs truncate">
                                     <div class="text-sm font-semibold text-gray-900 truncate"
                                         title="{{ $intervention->libelle }}">
@@ -58,6 +59,13 @@
                                     </div>
                                     <div class="text-xs text-gray-500 truncate mt-0.5" title="{{ $intervention->description }}">
                                         {{ $intervention->description }}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fas fa-map-marker-alt text-red-500 text-xs"></i>
+                                        <span
+                                            class="text-sm font-bold text-gray-700">{{ $intervention->site->name ?? 'N/A' }}</span>
                                     </div>
                                 </td>
                                 <td class="px-6 py-4">
@@ -82,13 +90,13 @@
                                     <div class="flex items-center justify-center gap-2">
                                         @if($intervention->rapport_path)
                                             <button onclick="openReportDetails(
-                                                                                    '{{ $intervention->id }}', 
-                                                                                    `{{ addslashes($intervention->rapport_commentaire) }}`, 
-                                                                                    '{{ \Carbon\Carbon::parse($intervention->date_debut_reelle)->format('d/m/Y H:i') }}', 
-                                                                                    '{{ \Carbon\Carbon::parse($intervention->date_fin_reelle)->format('d/m/Y H:i') }}',
-                                                                                    '{{ asset('storage/' . $intervention->rapport_path) }}',
-                                                                                    {{ json_encode($intervention->equipements->map(fn($e) => ['name' => $e->name, 'quantity' => $e->pivot->quantity, 'unit' => $e->unit])) }}
-                                                                                )"
+                                                                                                '{{ $intervention->id }}', 
+                                                                                                `{{ addslashes($intervention->rapport_commentaire) }}`, 
+                                                                                                '{{ \Carbon\Carbon::parse($intervention->date_debut_reelle)->format('d/m/Y H:i') }}', 
+                                                                                                '{{ \Carbon\Carbon::parse($intervention->date_fin_reelle)->format('d/m/Y H:i') }}',
+                                                                                                '{{ asset('storage/' . $intervention->rapport_path) }}',
+                                                                                                {{ json_encode($intervention->equipements->map(fn($e) => ['name' => $e->name, 'quantity' => $e->pivot->quantity, 'unit' => $e->unit])) }}
+                                                                                            )"
                                                 class="inline-flex items-center justify-center px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors text-xs font-medium"
                                                 title="Détails du Rapport">
                                                 <i class="fas fa-eye mr-1"></i> Rapport
@@ -135,48 +143,48 @@
             let equipHtml = '';
             if (equipments && equipments.length > 0) {
                 equipHtml = `
-                        <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
-                            <h4 class="text-xs font-bold text-gray-500 uppercase mb-2">Matériel Utilisé</h4>
-                            <div class="space-y-2">
-                                ${equipments.map(e => `
-                                    <div class="flex justify-between items-center text-sm">
-                                        <span class="text-gray-700 font-medium">${e.name}</span>
-                                        <span class="text-blue-600 font-bold">${e.quantity} ${e.unit}</span>
-                                    </div>
-                                `).join('')}
+                            <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                                <h4 class="text-xs font-bold text-gray-500 uppercase mb-2">Matériel Utilisé</h4>
+                                <div class="space-y-2">
+                                    ${equipments.map(e => `
+                                        <div class="flex justify-between items-center text-sm">
+                                            <span class="text-gray-700 font-medium">${e.name}</span>
+                                            <span class="text-blue-600 font-bold">${e.quantity} ${e.unit}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
                             </div>
-                        </div>
-                    `;
+                        `;
             }
 
             Swal.fire({
                 title: 'Détails du Rapport',
                 html: `
-                                                    <div class="text-left space-y-4">
-                                                        <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
-                                                            <h4 class="text-xs font-bold text-gray-500 uppercase mb-1">Dates Réelles</h4>
-                                                            <p class="text-sm text-gray-800">Du <strong>${start}</strong> au <strong>${end}</strong></p>
+                                                        <div class="text-left space-y-4">
+                                                            <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                                                                <h4 class="text-xs font-bold text-gray-500 uppercase mb-1">Dates Réelles</h4>
+                                                                <p class="text-sm text-gray-800">Du <strong>${start}</strong> au <strong>${end}</strong></p>
+                                                            </div>
+
+                                                            ${equipHtml}
+
+                                                            <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                                                                <h4 class="text-xs font-bold text-gray-500 uppercase mb-1">Commentaire</h4>
+                                                                <p class="text-sm text-gray-700 whitespace-pre-wrap">${comment}</p>
+                                                            </div>
+
+                                                            <div class="flex flex-col gap-3 mt-4">
+                                                                <a href="${fileUrl}" target="_blank" class="flex items-center justify-center gap-2 w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold text-sm">
+                                                                    <i class="fas fa-file-download"></i> Voir le fichier joint
+                                                                </a>
+
+                                                                <button onclick="confirmReject('${id}')" class="w-full py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors font-semibold text-sm flex items-center justify-center gap-2">
+                                                                    <i class="fas fa-times-circle"></i> Signaler comme Incorrect
+                                                                </button>
+
+                                                            </div>
                                                         </div>
-
-                                                        ${equipHtml}
-
-                                                        <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
-                                                            <h4 class="text-xs font-bold text-gray-500 uppercase mb-1">Commentaire</h4>
-                                                            <p class="text-sm text-gray-700 whitespace-pre-wrap">${comment}</p>
-                                                        </div>
-
-                                                        <div class="flex flex-col gap-3 mt-4">
-                                                            <a href="${fileUrl}" target="_blank" class="flex items-center justify-center gap-2 w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold text-sm">
-                                                                <i class="fas fa-file-download"></i> Voir le fichier joint
-                                                            </a>
-
-                                                            <button onclick="confirmReject('${id}')" class="w-full py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors font-semibold text-sm flex items-center justify-center gap-2">
-                                                                <i class="fas fa-times-circle"></i> Signaler comme Incorrect
-                                                            </button>
-
-                                                        </div>
-                                                    </div>
-                                                `,
+                                                    `,
                 showConfirmButton: false,
                 showCloseButton: true,
                 width: '600px'
@@ -205,20 +213,20 @@
             Swal.fire({
                 title: 'Soumettre un devis',
                 html: `
-                                                            <div class="text-left space-y-4">
-                                                                <p class="text-gray-600 text-sm">Veuillez indiquer le montant et télécharger le fichier du devis.</p>
+                                                                <div class="text-left space-y-4">
+                                                                    <p class="text-gray-600 text-sm">Veuillez indiquer le montant et télécharger le fichier du devis.</p>
 
-                                                                <div>
-                                                                    <label class="block text-gray-700 text-sm font-bold mb-2">Montant du devis (EURO)</label>
-                                                                    <input type="number" id="swal-montant" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 border-gray-300" placeholder="Ex: 150000">
-                                                                </div>
+                                                                    <div>
+                                                                        <label class="block text-gray-700 text-sm font-bold mb-2">Montant du devis (EURO)</label>
+                                                                        <input type="number" id="swal-montant" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 border-gray-300" placeholder="Ex: 150000">
+                                                                    </div>
 
-                                                                <div>
-                                                                    <label class="block text-gray-700 text-sm font-bold mb-2">Fichier du devis (PDF, IMG)</label>
-                                                                    <input type="file" id="swal-file" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 border-gray-300" accept=".pdf,.jpg,.jpeg,.png">
+                                                                    <div>
+                                                                        <label class="block text-gray-700 text-sm font-bold mb-2">Fichier du devis (PDF, IMG)</label>
+                                                                        <input type="file" id="swal-file" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 border-gray-300" accept=".pdf,.jpg,.jpeg,.png">
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        `,
+                                                            `,
                 showCancelButton: true,
                 confirmButtonColor: '#FBBF24',
                 cancelButtonColor: '#d33',

@@ -144,7 +144,7 @@ class UserAuthenticate extends Controller
     {
         if (auth('user')->check()) {
             $role = auth('user')->user()->role;
-            if ($role === 'admin')
+            if ($role === 'admin' || $role === 'collegue')
                 return redirect()->route('admin.dashboard');
             if ($role === 'prestataire')
                 return redirect()->route('prestataire.dashboard');
@@ -174,8 +174,8 @@ class UserAuthenticate extends Controller
             if (auth('user')->attempt($request->only('email', 'password'))) {
                 $user = auth('user')->user();
 
-                if ($user->role === 'admin') {
-                    return redirect()->route('admin.dashboard')->with('success', 'Bienvenue Admin sur votre espace.');
+                if ($user->role === 'admin' || $user->role === 'collegue') {
+                    return redirect()->route('admin.dashboard')->with('success', 'Bienvenue sur votre espace.');
                 }
 
                 if ($user->role === 'prestataire') {

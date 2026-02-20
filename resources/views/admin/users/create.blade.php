@@ -36,7 +36,8 @@
                             </div>
                             <div>
                                 <h3 class="text-lg font-bold text-gray-800">Informations du Compte</h3>
-                                <p class="text-xs text-gray-500">Remplissez les détails pour créer un nouvel utilisateur.</p>
+                                <p class="text-xs text-gray-500">Remplissez les détails pour créer un nouvel utilisateur.
+                                </p>
                             </div>
                         </div>
 
@@ -53,9 +54,14 @@
                                     </span>
                                     <select name="role" id="role" onchange="toggleFields()"
                                         class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-red-500 transition-all outline-none text-gray-700 appearance-none">
-                                        <option value="responsable" {{ old('role') == 'responsable' ? 'selected' : '' }}>Responsable AF</option>
-                                        <option value="prestataire" {{ old('role') == 'prestataire' ? 'selected' : '' }}>Prestataire</option>
-                                        <option value="finance" {{ old('role') == 'finance' ? 'selected' : '' }}>Financier</option>
+                                        <option value="responsable" {{ old('role') == 'responsable' ? 'selected' : '' }}>
+                                            Responsable AF</option>
+                                        <option value="collegue" {{ old('role') == 'collegue' ? 'selected' : '' }}>Collègue
+                                        </option>
+                                        <option value="prestataire" {{ old('role') == 'prestataire' ? 'selected' : '' }}>
+                                            Prestataire</option>
+                                        <option value="finance" {{ old('role') == 'finance' ? 'selected' : '' }}>Financier
+                                        </option>
                                     </select>
                                     <span
                                         class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400">
@@ -145,8 +151,8 @@
 
                             <!-- Photo - Version améliorée avec aperçu -->
                             <div class="relative md:col-span-3">
-                                <label
-                                    class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Photo de profil
+                                <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Photo
+                                    de profil
                                     (Optionnel)</label>
 
                                 <div class="flex flex-col lg:flex-row items-start lg:items-center gap-8">
@@ -201,16 +207,18 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <!-- Zone d'aperçu de l'image -->
                                     <div class="w-32 h-32 flex-shrink-0">
                                         <div id="imagePreview"
                                             class="w-full h-full rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 flex flex-col items-center justify-center overflow-hidden transition-all duration-300">
                                             <div id="previewPlaceholder" class="text-center p-4">
                                                 <i class="fas fa-user text-gray-300 text-3xl mb-2"></i>
-                                                <p class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Aperçu</p>
+                                                <p class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">
+                                                    Aperçu</p>
                                             </div>
-                                            <img id="previewImage" src="" alt="Aperçu" class="hidden w-full h-full object-cover">
+                                            <img id="previewImage" src="" alt="Aperçu"
+                                                class="hidden w-full h-full object-cover">
                                         </div>
                                     </div>
                                 </div>
@@ -221,7 +229,8 @@
                     <!-- Footer Actions -->
                     <div class="flex items-center justify-end pt-6 border-t border-gray-100">
                         <button type="reset"
-                            class="px-6 py-3 mr-4 text-gray-500 hover:text-gray-700 font-medium transition-colors" onclick="setTimeout(toggleFields, 10)">
+                            class="px-6 py-3 mr-4 text-gray-500 hover:text-gray-700 font-medium transition-colors"
+                            onclick="setTimeout(toggleFields, 10)">
                             Annuler
                         </button>
                         <button type="submit"

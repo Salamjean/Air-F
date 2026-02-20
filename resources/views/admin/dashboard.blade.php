@@ -8,13 +8,14 @@
     <div class="container-fluid px-6 py-8">
         <!-- Welcome Section -->
         <div class="mb-10 animate-fade-in">
-            <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight">Espace <span
-                    class="text-blue-600">Administration</span></h1>
+            <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight">Espace <span class="text-blue-600"> M.
+                    {{ Auth::user()->prenom }} {{ Auth::user()->name ?? ''}}</span></h1>
             <p class="text-lg text-gray-600 mt-2">Bienvenue. Voici l'état global de vos services et interventions.</p>
         </div>
 
         <!-- Stats Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
+        <div
+            class="grid grid-cols-1 md:grid-cols-2 {{ Auth::user()->role === 'admin' ? 'lg:grid-cols-4' : 'lg:grid-cols-3' }} gap-8 mb-10">
             <!-- Interventions -->
             <div class="relative group">
                 <div
@@ -36,24 +37,26 @@
             </div>
 
             <!-- Utilisateurs -->
-            <div class="relative group">
-                <div
-                    class="absolute -inset-0.5 bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000">
-                </div>
-                <div
-                    class="relative bg-white rounded-2xl shadow-sm p-6 border border-gray-100 hover:shadow-md transition-all">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="p-3 bg-purple-50 rounded-xl text-purple-600">
-                            <i class="fas fa-users text-xl"></i>
+            @if(Auth::user()->role === 'admin')
+                <div class="relative group">
+                    <div
+                        class="absolute -inset-0.5 bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000">
+                    </div>
+                    <div
+                        class="relative bg-white rounded-2xl shadow-sm p-6 border border-gray-100 hover:shadow-md transition-all">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="p-3 bg-purple-50 rounded-xl text-purple-600">
+                                <i class="fas fa-users text-xl"></i>
+                            </div>
+                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Communauté</span>
                         </div>
-                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Communauté</span>
-                    </div>
-                    <div>
-                        <h3 class="text-3xl font-black text-gray-900">{{ $stats['users'] }}</h3>
-                        <p class="text-sm font-medium text-gray-500 mt-1">Utilisateurs Inscrits</p>
+                        <div>
+                            <h3 class="text-3xl font-black text-gray-900">{{ $stats['users'] }}</h3>
+                            <p class="text-sm font-medium text-gray-500 mt-1">Utilisateurs Inscrits</p>
+                        </div>
                     </div>
                 </div>
-            </div>
+            @endif
 
             <!-- Equipements -->
             <div class="relative group">

@@ -45,9 +45,6 @@
                                         <span class="text-sm font-bold text-gray-900 group-hover:text-red-600 transition-colors">
                                             {{ $intervention->reference }}
                                         </span>
-                                        <span class="text-xs font-mono text-gray-500 bg-gray-100 px-2 py-0.5 rounded w-fit mt-1">
-                                            {{ $intervention->code }}
-                                        </span>
                                     </div>
                                 </td>
                                 <td class="px-6 py-4">
@@ -62,10 +59,7 @@
                                 </td>
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-2">
-                                        <div class="w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 flex-shrink-0">
-                                            <i class="fas fa-map-marker-alt text-xs"></i>
-                                        </div>
-                                        <span class="text-sm text-gray-700">{{ $intervention->commune ?? 'Non spécifié' }}</span>
+                                         <span class="text-sm text-gray-700 font-bold">{{ $intervention->site->name ?? 'N/A' }}</span>
                                     </div>
                                 </td>
                                 <td class="px-6 py-4">

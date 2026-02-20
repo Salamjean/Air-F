@@ -26,6 +26,7 @@
                     <tr>
                         <th class="px-6 py-4 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">Référence</th>
                         <th class="px-6 py-4 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">Libellé</th>
+                        <th class="px-6 py-4 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">Site</th>
                         <th class="px-6 py-4 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">Dates</th>
                         <th class="px-6 py-4 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">Statut</th>
                         <th class="px-6 py-4 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">Actions</th>
@@ -40,6 +41,12 @@
                             <td class="px-6 py-4 text-center">
                                 <div class="text-sm font-medium text-gray-900">{{ $intervention->libelle }}</div>
                                 <div class="text-xs text-gray-500 truncate max-w-xs">{{ Str::limit($intervention->description, 50) }}</div>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <div class="flex items-center justify-center gap-2">
+                                    <i class="fas fa-map-marker-alt text-red-500 text-xs"></i>
+                                    <span class="text-sm font-bold text-gray-700">{{ $intervention->site->name ?? 'N/A' }}</span>
+                                </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 text-center" >
                                 @if($intervention->date_debut && $intervention->date_fin)
@@ -95,7 +102,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-12 text-center text-gray-500">
+                            <td colspan="6" class="px-6 py-12 text-center text-gray-500">
                                 <i class="fas fa-inbox text-4xl mb-3 text-gray-300"></i>
                                 <p>Aucune intervention assignée pour le moment.</p>
                             </td>

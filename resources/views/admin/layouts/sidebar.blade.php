@@ -121,74 +121,76 @@
             <span class="mx-3 font-medium">Archives</span>
         </a> -->
 
-        <div class="px-4 mt-6 mb-2 text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">
-            Configuration
-        </div>
-
-        <div class="relative">
-            <button onclick="toggleSubmenu('equipements-submenu', 'equipements-chevron')"
-                class="w-full flex items-center justify-between px-6 py-3 {{ request()->is('admin/equipements*') || request()->is('admin/categories*') || request()->is('admin/sites*') ? 'bg-gray-800 text-gray-100 border-l-4 border-red-500' : 'text-gray-400 hover:bg-gray-800 hover:text-gray-100' }} transition-all border-l-4 border-transparent focus:outline-none group">
-                <div class="flex items-center">
-                    <i class="fas fa-tools w-6"></i>
-                    <span class="mx-3 font-medium">Consommables & Sites</span>
-                </div>
-                <i class="fas fa-chevron-down text-xs transition-transform transform {{ request()->is('admin/equipements*') || request()->is('admin/categories*') || request()->is('admin/sites*') ? 'rotate-180' : '' }}"
-                    id="equipements-chevron"></i>
-            </button>
-            <div id="equipements-submenu"
-                class="{{ request()->is('admin/equipements*') || request()->is('admin/categories*') || request()->is('admin/sites*') ? '' : 'hidden' }} bg-gray-800 overflow-hidden transition-all duration-300">
-                <a href="{{ route('admin.equipements.index') }}"
-                    class="flex items-center pl-16 py-2 text-sm {{ request()->routeIs('admin.equipements.index') ? 'text-white font-bold' : 'text-gray-400 hover:text-white' }} hover:bg-gray-700 transition-colors">
-                    <i class="fas fa-list w-4 text-xs mr-2"></i> Gestion de Stock
-                </a>
-                <a href="{{ route('admin.categories.index') }}"
-                    class="flex items-center pl-16 py-2 text-sm {{ request()->routeIs('admin.categories.index') ? 'text-white font-bold' : 'text-gray-400 hover:text-white' }} hover:bg-gray-700 transition-colors">
-                    <i class="fas fa-tags w-4 text-xs mr-2"></i> Catégories
-                </a>
-                <a href="{{ route('admin.equipements.history') }}"
-                    class="flex items-center pl-16 py-2 text-sm {{ request()->routeIs('admin.equipements.history') ? 'text-white font-bold' : 'text-gray-400 hover:text-white' }} hover:bg-gray-700 transition-colors">
-                    <i class="fas fa-history w-4 text-xs mr-2"></i> Historique
-                </a>
-                <a href="{{ route('admin.sites.index') }}"
-                    class="flex items-center pl-16 py-2 text-sm {{ request()->routeIs('admin.sites.index') ? 'text-white font-bold' : 'text-gray-400 hover:text-white' }} hover:bg-gray-700 transition-colors">
-                    <i class="fas fa-map-marked-alt w-4 text-xs mr-2"></i> Sites
-                </a>
+        @if (Auth::guard('user')->user()->role === 'admin')
+            <div class="px-4 mt-6 mb-2 text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">
+                Configuration
             </div>
-        </div>
 
-        <!-- Utilisateurs Dropdown -->
-        <div class="relative">
-            <button onclick="toggleSubmenu('users-submenu', 'users-chevron')"
-                class="w-full flex items-center justify-between px-6 py-3 {{ request()->is('admin/users*') ? 'bg-gray-800 text-gray-100 border-l-4 border-red-500' : 'text-gray-400 hover:bg-gray-800 hover:text-gray-100' }} transition-all border-l-4 border-transparent focus:outline-none group">
-                <div class="flex items-center">
-                    <i class="fas fa-users w-6"></i>
-                    <span class="mx-3 font-medium">Utilisateurs</span>
+            <div class="relative">
+                <button onclick="toggleSubmenu('equipements-submenu', 'equipements-chevron')"
+                    class="w-full flex items-center justify-between px-6 py-3 {{ request()->is('admin/equipements*') || request()->is('admin/categories*') || request()->is('admin/sites*') ? 'bg-gray-800 text-gray-100 border-l-4 border-red-500' : 'text-gray-400 hover:bg-gray-800 hover:text-gray-100' }} transition-all border-l-4 border-transparent focus:outline-none group">
+                    <div class="flex items-center">
+                        <i class="fas fa-tools w-6"></i>
+                        <span class="mx-3 font-medium">Consommables & Sites</span>
+                    </div>
+                    <i class="fas fa-chevron-down text-xs transition-transform transform {{ request()->is('admin/equipements*') || request()->is('admin/categories*') || request()->is('admin/sites*') ? 'rotate-180' : '' }}"
+                        id="equipements-chevron"></i>
+                </button>
+                <div id="equipements-submenu"
+                    class="{{ request()->is('admin/equipements*') || request()->is('admin/categories*') || request()->is('admin/sites*') ? '' : 'hidden' }} bg-gray-800 overflow-hidden transition-all duration-300">
+                    <a href="{{ route('admin.equipements.index') }}"
+                        class="flex items-center pl-16 py-2 text-sm {{ request()->routeIs('admin.equipements.index') ? 'text-white font-bold' : 'text-gray-400 hover:text-white' }} hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-list w-4 text-xs mr-2"></i> Gestion de Stock
+                    </a>
+                    <a href="{{ route('admin.categories.index') }}"
+                        class="flex items-center pl-16 py-2 text-sm {{ request()->routeIs('admin.categories.index') ? 'text-white font-bold' : 'text-gray-400 hover:text-white' }} hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-tags w-4 text-xs mr-2"></i> Catégories
+                    </a>
+                    <a href="{{ route('admin.equipements.history') }}"
+                        class="flex items-center pl-16 py-2 text-sm {{ request()->routeIs('admin.equipements.history') ? 'text-white font-bold' : 'text-gray-400 hover:text-white' }} hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-history w-4 text-xs mr-2"></i> Historique
+                    </a>
+                    <a href="{{ route('admin.sites.index') }}"
+                        class="flex items-center pl-16 py-2 text-sm {{ request()->routeIs('admin.sites.index') ? 'text-white font-bold' : 'text-gray-400 hover:text-white' }} hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-map-marked-alt w-4 text-xs mr-2"></i> Sites
+                    </a>
                 </div>
-                <i class="fas fa-chevron-down text-xs transition-transform transform {{ request()->is('admin/users*') ? 'rotate-180' : '' }}"
-                    id="users-chevron"></i>
-            </button>
-            <div id="users-submenu"
-                class="{{ request()->is('admin/users*') ? '' : 'hidden' }} bg-gray-800 overflow-hidden transition-all duration-300">
-                <a href="{{ route('admin.users.index') }}"
-                    class="flex items-center pl-16 py-2 text-sm {{ request()->routeIs('admin.users.index') ? 'text-white font-bold' : 'text-gray-400 hover:text-white' }} hover:bg-gray-700 transition-colors">
-                    <i class="fas fa-list w-4 text-xs mr-2"></i> Liste
-                </a>
-                <a href="{{ route('admin.users.create') }}"
-                    class="flex items-center pl-16 py-2 text-sm {{ request()->routeIs('admin.users.create') ? 'text-white font-bold' : 'text-gray-400 hover:text-white' }} hover:bg-gray-700 transition-colors">
-                    <i class="fas fa-plus circle w-4 text-xs mr-2"></i> Ajouter
-                </a>
-                <a href="{{ route('admin.users.archives') }}"
-                    class="flex items-center pl-16 py-2 text-sm {{ request()->routeIs('admin.users.archives') ? 'text-white font-bold' : 'text-gray-400 hover:text-white' }} hover:bg-gray-700 transition-colors">
-                    <i class="fas fa-archive w-4 text-xs mr-2"></i> Archives
-                </a>
             </div>
-        </div>
 
-        <a href="{{ route('admin.forfaits.index') }}"
-            class="flex items-center px-6 py-3 {{ request()->routeIs('admin.forfaits.index') ? 'bg-gray-800 text-gray-100 border-l-4 border-red-500' : 'text-gray-400 hover:bg-gray-800 hover:text-gray-100' }} transition-all">
-            <i class="fas fa-certificate w-6"></i>
-            <span class="mx-3 font-medium">Gestion des Forfaits</span>
-        </a>
+            <!-- Utilisateurs Dropdown -->
+            <div class="relative">
+                <button onclick="toggleSubmenu('users-submenu', 'users-chevron')"
+                    class="w-full flex items-center justify-between px-6 py-3 {{ request()->is('admin/users*') ? 'bg-gray-800 text-gray-100 border-l-4 border-red-500' : 'text-gray-400 hover:bg-gray-800 hover:text-gray-100' }} transition-all border-l-4 border-transparent focus:outline-none group">
+                    <div class="flex items-center">
+                        <i class="fas fa-users w-6"></i>
+                        <span class="mx-3 font-medium">Utilisateurs</span>
+                    </div>
+                    <i class="fas fa-chevron-down text-xs transition-transform transform {{ request()->is('admin/users*') ? 'rotate-180' : '' }}"
+                        id="users-chevron"></i>
+                </button>
+                <div id="users-submenu"
+                    class="{{ request()->is('admin/users*') ? '' : 'hidden' }} bg-gray-800 overflow-hidden transition-all duration-300">
+                    <a href="{{ route('admin.users.index') }}"
+                        class="flex items-center pl-16 py-2 text-sm {{ request()->routeIs('admin.users.index') ? 'text-white font-bold' : 'text-gray-400 hover:text-white' }} hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-list w-4 text-xs mr-2"></i> Liste
+                    </a>
+                    <a href="{{ route('admin.users.create') }}"
+                        class="flex items-center pl-16 py-2 text-sm {{ request()->routeIs('admin.users.create') ? 'text-white font-bold' : 'text-gray-400 hover:text-white' }} hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-plus-circle w-4 text-xs mr-2"></i> Ajouter
+                    </a>
+                    <a href="{{ route('admin.users.archives') }}"
+                        class="flex items-center pl-16 py-2 text-sm {{ request()->routeIs('admin.users.archives') ? 'text-white font-bold' : 'text-gray-400 hover:text-white' }} hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-archive w-4 text-xs mr-2"></i> Archives
+                    </a>
+                </div>
+            </div>
+
+            <a href="{{ route('admin.forfaits.index') }}"
+                class="flex items-center px-6 py-3 {{ request()->routeIs('admin.forfaits.index') ? 'bg-gray-800 text-gray-100 border-l-4 border-red-500' : 'text-gray-400 hover:bg-gray-800 hover:text-gray-100' }} transition-all">
+                <i class="fas fa-certificate w-6"></i>
+                <span class="mx-3 font-medium">Gestion des Forfaits</span>
+            </a>
+        @endif
 
         <!-- <a href="#"
             class="flex items-center px-6 py-3 text-gray-400 hover:bg-gray-800 hover:text-gray-100 hover:border-l-4 hover:border-red-500 transition-all border-l-4 border-transparent">

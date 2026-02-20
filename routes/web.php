@@ -39,7 +39,7 @@ Route::middleware(['auth:user', 'admin'])->prefix('admin')->group(function () {
     Route::match(['get', 'post'], '/logout', [UserDashboard::class, 'logout'])->name('admin.logout');
 
     //les routes de gestions des utilisateurs
-    Route::prefix('users')->group(function () {
+    Route::middleware('superadmin')->prefix('users')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('admin.users.index');
         Route::get('/archives', [UserController::class, 'archives'])->name('admin.users.archives');
         Route::patch('/{user}/restore', [UserController::class, 'restore'])->name('admin.users.restore');
@@ -78,45 +78,47 @@ Route::middleware(['auth:user', 'admin'])->prefix('admin')->group(function () {
     });
 
     // Gestion des équipements et catégories
-    Route::get('equipements/history', [EquipementController::class, 'history'])->name('admin.equipements.history');
-    Route::get('equipements/export', [EquipementController::class, 'export'])->name('admin.equipements.export');
-    Route::post('equipements/{equipement}/recharge', [EquipementController::class, 'recharge'])->name('admin.equipements.recharge');
-    Route::resource('equipements', EquipementController::class, ['as' => 'admin'])->names([
-        'index' => 'admin.equipements.index',
-        'create' => 'admin.equipements.create',
-        'store' => 'admin.equipements.store',
-        'edit' => 'admin.equipements.edit',
-        'update' => 'admin.equipements.update',
-        'destroy' => 'admin.equipements.destroy',
-    ]);
-    Route::resource('equipement-categories', EquipementCategoryController::class)->parameters([
-        'equipement-categories' => 'category'
-    ])->names([
-                'index' => 'admin.categories.index',
-                'create' => 'admin.categories.create',
-                'store' => 'admin.categories.store',
-                'edit' => 'admin.categories.edit',
-                'update' => 'admin.categories.update',
-                'destroy' => 'admin.categories.destroy',
-            ]);
+    Route::middleware('superadmin')->group(function () {
+        Route::get('equipements/history', [EquipementController::class, 'history'])->name('admin.equipements.history');
+        Route::get('equipements/export', [EquipementController::class, 'export'])->name('admin.equipements.export');
+        Route::post('equipements/{equipement}/recharge', [EquipementController::class, 'recharge'])->name('admin.equipements.recharge');
+        Route::resource('equipements', EquipementController::class, ['as' => 'admin'])->names([
+            'index' => 'admin.equipements.index',
+            'create' => 'admin.equipements.create',
+            'store' => 'admin.equipements.store',
+            'edit' => 'admin.equipements.edit',
+            'update' => 'admin.equipements.update',
+            'destroy' => 'admin.equipements.destroy',
+        ]);
+        Route::resource('equipement-categories', EquipementCategoryController::class)->parameters([
+            'equipement-categories' => 'category'
+        ])->names([
+                    'index' => 'admin.categories.index',
+                    'create' => 'admin.categories.create',
+                    'store' => 'admin.categories.store',
+                    'edit' => 'admin.categories.edit',
+                    'update' => 'admin.categories.update',
+                    'destroy' => 'admin.categories.destroy',
+                ]);
 
-    Route::resource('sites', SiteController::class)->names([
-        'index' => 'admin.sites.index',
-        'create' => 'admin.sites.create',
-        'store' => 'admin.sites.store',
-        'edit' => 'admin.sites.edit',
-        'update' => 'admin.sites.update',
-        'destroy' => 'admin.sites.destroy',
-    ]);
+        Route::resource('sites', SiteController::class)->names([
+            'index' => 'admin.sites.index',
+            'create' => 'admin.sites.create',
+            'store' => 'admin.sites.store',
+            'edit' => 'admin.sites.edit',
+            'update' => 'admin.sites.update',
+            'destroy' => 'admin.sites.destroy',
+        ]);
 
-    Route::resource('forfaits', ForfaitController::class)->names([
-        'index' => 'admin.forfaits.index',
-        'create' => 'admin.forfaits.create',
-        'store' => 'admin.forfaits.store',
-        'edit' => 'admin.forfaits.edit',
-        'update' => 'admin.forfaits.update',
-        'destroy' => 'admin.forfaits.destroy',
-    ]);
+        Route::resource('forfaits', ForfaitController::class)->names([
+            'index' => 'admin.forfaits.index',
+            'create' => 'admin.forfaits.create',
+            'store' => 'admin.forfaits.store',
+            'edit' => 'admin.forfaits.edit',
+            'update' => 'admin.forfaits.update',
+            'destroy' => 'admin.forfaits.destroy',
+        ]);
+    });
 });
 
 //Les routes de gestion du prestataire

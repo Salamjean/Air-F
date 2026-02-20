@@ -18,7 +18,7 @@ class PersonnelInterventionController extends Controller
     {
         $query = Intervention::whereHas('personnels', function ($q) {
             $q->where('users.id', auth('user')->id());
-        })->with('personnels')->whereIn('statut', ['confirmer', 'traiter_incorrect']);
+        })->with(['personnels', 'site'])->whereIn('statut', ['confirmer', 'traiter_incorrect']);
 
         if ($request->has('search')) {
             $search = $request->input('search');
@@ -38,7 +38,7 @@ class PersonnelInterventionController extends Controller
     {
         $query = Intervention::whereHas('personnels', function ($q) {
             $q->where('users.id', Auth::guard('user')->id());
-        })->with('personnels')->whereIn('statut', ['traiter', 'devis', 'accord', 'finance', 'payer']);
+        })->with(['personnels', 'site'])->whereIn('statut', ['traiter', 'devis', 'accord', 'finance', 'payer']);
 
         if ($request->has('search')) {
             $search = $request->input('search');
@@ -60,7 +60,7 @@ class PersonnelInterventionController extends Controller
             return back()->with('error', 'Action non autorisée.');
         }
 
-        $intervention->load(['equipements', 'prestataire']);
+        $intervention->load(['equipements', 'prestataire', 'site']);
 
         return view('personnel.interventions.details', compact('intervention'));
     }
@@ -123,8 +123,6 @@ class PersonnelInterventionController extends Controller
             $intervention->date_debut_reelle = $request->date_debut_reelle;
             $intervention->date_fin_reelle = $request->date_fin_reelle;
             $intervention->rapport_commentaire = $request->rapport_commentaire;
-            $intervention->statut = 'traiter';
-            $intervention->save();
 
             // Handle equipment usage (Consommables)
             if ($request->has('equipements')) {
@@ -164,6 +162,10 @@ class PersonnelInterventionController extends Controller
                     ]);
                 }
             }
+
+            // Mettre à jour le statut seulement si tout s'est bien passé (y compris les stocks)
+            $intervention->statut = 'traiter';
+            $intervention->save();
 
             DB::commit();
             Log::info('Intervention traitée par personnel : ' . $intervention->reference);

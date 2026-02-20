@@ -32,6 +32,7 @@
                             class="bg-green-50/50 border-b border-gray-100 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                             <th class="px-6 py-4">Référence</th>
                             <th class="px-6 py-4">Libellé</th>
+                            <th class="px-6 py-4">Site</th>
                             <th class="px-6 py-4">Dates Réelles</th>
                             <th class="px-6 py-4">Statut</th>
                             <th class="px-6 py-4 text-right">Actions</th>
@@ -55,6 +56,13 @@
                                     </div>
                                     <div class="text-xs text-gray-500 truncate mt-0.5" title="{{ $intervention->description }}">
                                         {{ $intervention->description }}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fas fa-map-marker-alt text-red-500 text-xs"></i>
+                                        <span
+                                            class="text-sm font-bold text-gray-700">{{ $intervention->site->name ?? 'N/A' }}</span>
                                     </div>
                                 </td>
                                 <td class="px-6 py-4">
@@ -94,7 +102,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="px-6 py-12 text-center">
+                                <td colspan="6" class="px-6 py-12 text-center">
                                     <div class="flex flex-col items-center justify-center">
                                         <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
                                             <i class="fas fa-clipboard-list text-2xl text-gray-300"></i>
@@ -118,18 +126,18 @@
             Swal.fire({
                 title: 'Détails du Rapport',
                 html: `
-                                    <div class="text-left space-y-4">
-                                        <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
-                                            <h4 class="text-xs font-bold text-gray-500 uppercase mb-1">Dates Réelles</h4>
-                                            <p class="text-sm text-gray-800">Du <strong>${start}</strong> au <strong>${end}</strong></p>
-                                        </div>
+                                            <div class="text-left space-y-4">
+                                                <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                                                    <h4 class="text-xs font-bold text-gray-500 uppercase mb-1">Dates Réelles</h4>
+                                                    <p class="text-sm text-gray-800">Du <strong>${start}</strong> au <strong>${end}</strong></p>
+                                                </div>
 
-                                        <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
-                                            <h4 class="text-xs font-bold text-gray-500 uppercase mb-1">Commentaire</h4>
-                                            <p class="text-sm text-gray-700 whitespace-pre-wrap">${comment}</p>
-                                        </div>
-                                    </div>
-                                `,
+                                                <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                                                    <h4 class="text-xs font-bold text-gray-500 uppercase mb-1">Commentaire</h4>
+                                                    <p class="text-sm text-gray-700 whitespace-pre-wrap">${comment}</p>
+                                                </div>
+                                            </div>
+                                        `,
                 showConfirmButton: true,
                 confirmButtonColor: '#10B981',
                 confirmButtonText: 'Fermer',

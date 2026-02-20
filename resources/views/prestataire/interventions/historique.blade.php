@@ -31,6 +31,7 @@
                             class="bg-gray-50 border-b border-gray-100 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                             <th class="px-6 py-4">Référence</th>
                             <th class="px-6 py-4">Libellé</th>
+                            <th class="px-6 py-4">Site</th>
                             <th class="px-6 py-4">Personnel</th>
                             <th class="px-6 py-4">Montant</th>
                             <th class="px-6 py-4 text-right">Actions</th>
@@ -51,6 +52,13 @@
                                     <div class="text-sm font-semibold text-gray-900 truncate"
                                         title="{{ $intervention->libelle }}">
                                         {{ $intervention->libelle }}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fas fa-map-marker-alt text-red-500 text-xs"></i>
+                                        <span
+                                            class="text-sm font-bold text-gray-700">{{ $intervention->site->name ?? 'N/A' }}</span>
                                     </div>
                                 </td>
                                 <td class="px-6 py-4">
@@ -78,7 +86,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="px-6 py-12 text-center">
+                                <td colspan="6" class="px-6 py-12 text-center">
                                     <div class="flex flex-col items-center justify-center">
                                         <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
                                             <i class="fas fa-history text-2xl text-gray-300"></i>

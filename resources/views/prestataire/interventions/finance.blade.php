@@ -28,6 +28,8 @@
                                 Référence</th>
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Libellé
                             </th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Site
+                            </th>
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Montant
                                 Final</th>
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Soumis
@@ -43,12 +45,18 @@
                             <tr class="hover:bg-gray-50 transition-colors">
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="font-bold text-gray-800">{{ $intervention->reference }}</span>
-                                    <div class="text-[10px] text-gray-400 font-mono italic">{{ $intervention->code }}</div>
                                 </td>
                                 <td class="px-6 py-4">
                                     <div class="text-sm font-medium text-gray-900">{{ $intervention->libelle }}</div>
                                     <div class="text-xs text-gray-500 truncate max-w-xs">
                                         {{ Str::limit($intervention->description, 50) }}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fas fa-map-marker-alt text-red-500 text-xs"></i>
+                                        <span
+                                            class="text-sm font-bold text-gray-700">{{ $intervention->site->name ?? 'N/A' }}</span>
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -106,7 +114,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="px-6 py-20 text-center text-gray-500">
+                                <td colspan="7" class="px-6 py-20 text-center text-gray-500">
                                     <div class="flex flex-col items-center justify-center">
                                         <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
                                             <i class="fas fa-university text-2xl text-gray-200"></i>

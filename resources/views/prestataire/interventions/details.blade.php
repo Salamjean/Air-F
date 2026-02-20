@@ -410,6 +410,20 @@
 
             <!-- Right Column: Sidebar -->
             <div class="space-y-8">
+                <!-- Site Card -->
+                <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
+                    <h3 class="text-lg font-bold text-gray-900 mb-6 flex items-center gap-3">
+                        <i class="fas fa-map-marker-alt text-red-500"></i> Localisation
+                    </h3>
+
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center py-3">
+                            <span class="text-gray-500 text-sm">Site</span>
+                            <span class="text-gray-900 text-sm font-bold">{{ $intervention->site->name ?? 'N/A' }}</span>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Actors Card -->
                 <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
                     <div class="p-6 border-b border-gray-100 bg-gray-50/50">
