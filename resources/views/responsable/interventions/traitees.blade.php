@@ -1,0 +1,115 @@
+@extends('responsable.layouts.template')
+
+@section('content')
+    <div class="container mx-auto px-6 py-10">
+        <!-- Header Section -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-10 gap-6">
+            <div>
+                <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight">Rapports Soumis</h1>
+                <p class="text-lg text-gray-600 mt-2">Consultez les rapports d'intervention soumis par le personnel
+                    technique.</p>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="w-full md:w-auto relative">
+                <form action="{{ route('responsable.interventions.traitees') }}" method="GET" class="relative group">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-search text-gray-400 group-focus-within:text-purple-500 transition-colors"></i>
+                    </div>
+                    <input type="text" name="search" value="{{ request('search') }}"
+                        class="pl-10 pr-4 py-3 w-full md:w-80 bg-white border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-300 placeholder-gray-400 text-gray-700"
+                        placeholder="Rechercher par référence, code...">
+                </form>
+            </div>
+        </div>
+
+        <!-- Table Container -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full whitespace-nowrap">
+                    <thead>
+                        <tr
+                            class="bg-purple-50/50 border-b border-gray-100 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                            <th class="px-6 py-4">Référence</th>
+                            <th class="px-6 py-4">Libellé</th>
+                            <th class="px-6 py-4">Personnel</th>
+                            <th class="px-6 py-4">Date de fin réelle</th>
+                            <th class="px-6 py-4">Statut</th>
+                            <th class="px-6 py-4 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        @forelse($interventions as $intervention)
+                            <tr class="hover:bg-gray-50 transition-colors duration-200 group">
+                                <td class="px-6 py-4">
+                                    <div class="flex flex-col">
+                                        <span
+                                            class="text-sm font-bold text-gray-900 group-hover:text-purple-600 transition-colors">
+                                            {{ $intervention->reference }}
+                                        </span>
+                                        <span
+                                            class="text-xs font-mono text-gray-500 bg-gray-100 px-2 py-0.5 rounded w-fit mt-1">
+                                            {{ $intervention->code }}
+                                        </span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 max-w-xs truncate">
+                                    <div class="text-sm font-semibold text-gray-900 truncate"
+                                        title="{{ $intervention->libelle }}">
+                                        {{ $intervention->libelle }}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    @if($intervention->personnels->count() > 0)
+                                        <div class="flex items-center gap-2">
+                                            <div
+                                                class="w-6 h-6 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-[10px] font-bold">
+                                                {{ substr($intervention->personnels->first()->name, 0, 1) }}
+                                            </div>
+                                            <span class="text-sm text-gray-700">
+                                                {{ $intervention->personnels->first()->name }}
+                                            </span>
+                                        </div>
+                                    @else
+                                        <span class="text-xs text-gray-400 italic">N/A</span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="text-sm text-gray-600">
+                                        {{ $intervention->date_fin_reelle ? \Carbon\Carbon::parse($intervention->date_fin_reelle)->format('d/m/Y') : 'N/A' }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span
+                                        class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-purple-50 text-purple-700 border border-purple-100">
+                                        <i class="fas fa-tasks text-purple-500"></i> Rapport Soumis
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <a href="{{ route('responsable.interventions.details', $intervention->id) }}"
+                                        class="inline-flex items-center justify-center w-8 h-8 bg-gray-50 text-gray-600 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors"
+                                        title="Détails">
+                                        <i class="fas fa-arrow-right"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="px-6 py-12 text-center">
+                                    <div class="flex flex-col items-center justify-center">
+                                        <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
+                                            <i class="fas fa-clipboard-list text-2xl text-gray-300"></i>
+                                        </div>
+                                        <h3 class="text-lg font-medium text-gray-900">Aucun rapport soumis</h3>
+                                        <p class="text-gray-500 mt-1 max-w-sm text-sm">Les rapports d'intervention soumis par le
+                                            personnel apparaîtront ici.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+@endsection

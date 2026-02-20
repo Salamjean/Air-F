@@ -65,15 +65,18 @@ class AppServiceProvider extends ServiceProvider
             $countEnvoieResponsable = \App\Models\Intervention::where('statut', 'envoyer')->count(); // Pool global
 
             $countConfirmerResponsable = \App\Models\Intervention::where('statut', 'facture')
-                ->where('responsable_id', $userId)
                 ->count();
 
             $countAccordResponsable = \App\Models\Intervention::where('statut', 'accord')
-                ->where('responsable_id', $userId)
                 ->count();
 
             $countPayerResponsable = \App\Models\Intervention::where('statut', 'payer')
-                ->where('responsable_id', $userId)
+                ->count();
+
+            $countDevisResponsable = \App\Models\Intervention::where('statut', 'devis')
+                ->count();
+
+            $countTraiterResponsable = \App\Models\Intervention::where('statut', 'traiter')
                 ->count();
 
             // Counts for Personnel
@@ -109,6 +112,8 @@ class AppServiceProvider extends ServiceProvider
                 'countConfirmerResponsable',
                 'countAccordResponsable',
                 'countPayerResponsable',
+                'countDevisResponsable',
+                'countTraiterResponsable',
                 'countATraiterPersonnel',
                 'countHistoriquePersonnel'
             ));

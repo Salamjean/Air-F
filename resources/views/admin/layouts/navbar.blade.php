@@ -23,11 +23,11 @@
 
         <div class="relative group">
             <button class="flex items-center space-x-2 focus:outline-none">
-                <img src="https://ui-avatars.com/api/?name={{ Auth::guard('user')->user()->name.' '.Auth::guard('user')->user()->prenom ?? 'Admin' }}&background=EBF4FF&color=EF4444"
+                <img src="https://ui-avatars.com/api/?name={{ Auth::guard('user')->user()->name . ' ' . Auth::guard('user')->user()->prenom ?? 'Admin' }}&background=EBF4FF&color=EF4444"
                     class="w-10 h-10 rounded-full border-2 border-white shadow-sm" alt="Admin">
                 <div class="hidden md:block text-left">
                     <span
-                        class="block text-sm font-medium text-gray-700">{{ Auth::guard('user')->user()->name.' '.Auth::guard('user')->user()->prenom ?? 'Admin' }}</span>
+                        class="block text-sm font-medium text-gray-700">{{ Auth::guard('user')->user()->name . ' ' . Auth::guard('user')->user()->prenom ?? 'Admin' }}</span>
                     <span class="block text-xs text-gray-500">Administrateur</span>
                 </div>
                 <i class="fas fa-chevron-down text-xs text-gray-400 group-hover:text-gray-600 transition-colors"></i>
@@ -36,13 +36,9 @@
             <!-- Dropdown -->
             <div
                 class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 invisible opacity-0 translate-y-2 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 z-50 transform origin-top-right border border-gray-100">
-                <a href="#"
+                <a href="{{ route('admin.profile.edit') }}"
                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors">
                     <i class="fas fa-user-circle mr-2 text-gray-400"></i> Mon Profil
-                </a>
-                <a href="#"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors">
-                    <i class="fas fa-cog mr-2 text-gray-400"></i> Paramètres
                 </a>
                 <div class="border-t border-gray-100 my-1"></div>
                 <form action="{{ route('admin.logout') }}" method="POST">

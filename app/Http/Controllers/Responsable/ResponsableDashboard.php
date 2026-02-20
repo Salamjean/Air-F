@@ -12,18 +12,16 @@ class ResponsableDashboard extends Controller
         $userId = auth('user')->id();
 
         $stats = [
-            'total' => \App\Models\Intervention::where('responsable_id', $userId)->count(),
+            'total' => \App\Models\Intervention::count(),
             'envoyees' => \App\Models\Intervention::where('statut', 'envoyer')->count(), // Pool global
-            'confirmer' => \App\Models\Intervention::where('responsable_id', $userId)->where('statut', 'facture')->count(),
-            'accordees' => \App\Models\Intervention::where('responsable_id', $userId)->where('statut', 'accord')->count(),
-            'payees' => \App\Models\Intervention::where('responsable_id', $userId)->where('statut', 'payer')->count(),
+            'traitees' => \App\Models\Intervention::where('statut', 'traiter')->count(),
+            'devis' => \App\Models\Intervention::where('statut', 'devis')->count(),
+            'confirmer' => \App\Models\Intervention::where('statut', 'facture')->count(),
+            'accordees' => \App\Models\Intervention::where('statut', 'accord')->count(),
+            'payees' => \App\Models\Intervention::where('statut', 'payer')->count(),
         ];
 
-        $recentInterventions = \App\Models\Intervention::where(function ($q) use ($userId) {
-            $q->where('responsable_id', $userId)
-                ->orWhere('statut', 'envoyer');
-        })
-            ->latest()
+        $recentInterventions = \App\Models\Intervention::latest()
             ->take(5)
             ->get();
 

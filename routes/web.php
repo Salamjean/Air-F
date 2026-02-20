@@ -38,6 +38,10 @@ Route::middleware(['auth:user', 'admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [UserDashboard::class, 'dashboard'])->name('admin.dashboard');
     Route::match(['get', 'post'], '/logout', [UserDashboard::class, 'logout'])->name('admin.logout');
 
+    // Profil Admin
+    Route::get('/profile', [App\Http\Controllers\Admin\ProfileController::class, 'edit'])->name('admin.profile.edit');
+    Route::put('/profile', [App\Http\Controllers\Admin\ProfileController::class, 'update'])->name('admin.profile.update');
+
     //les routes de gestions des utilisateurs
     Route::middleware('superadmin')->prefix('users')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('admin.users.index');
@@ -126,6 +130,10 @@ Route::middleware(['auth:user', 'prestataire'])->prefix('prestataire')->group(fu
     Route::get('/dashboard', [PrestataireDashboard::class, 'dashboard'])->name('prestataire.dashboard');
     Route::match(['get', 'post'], '/logout', [PrestataireDashboard::class, 'logout'])->name('prestataire.logout');
 
+    // Profil Prestataire
+    Route::get('/profile', [App\Http\Controllers\Prestataire\ProfileController::class, 'edit'])->name('prestataire.profile.edit');
+    Route::put('/profile', [App\Http\Controllers\Prestataire\ProfileController::class, 'update'])->name('prestataire.profile.update');
+
     // Gestion des interventions
     Route::prefix('interventions')->group(function () {
         Route::get('/', [PrestataireIntervention::class, 'index'])->name('prestataire.interventions.index');
@@ -170,10 +178,16 @@ Route::middleware(['auth:user', 'responsable'])->prefix('responsable')->group(fu
     Route::get('/dashboard', [ResponsableDashboard::class, 'dashboard'])->name('responsable.dashboard');
     Route::match(['get', 'post'], '/logout', [ResponsableDashboard::class, 'logout'])->name('responsable.logout');
 
+    // Profil Responsable
+    Route::get('/profile', [App\Http\Controllers\Responsable\ProfileController::class, 'edit'])->name('responsable.profile.edit');
+    Route::put('/profile', [App\Http\Controllers\Responsable\ProfileController::class, 'update'])->name('responsable.profile.update');
+
     // Gestion des interventions pour le responsable
     Route::prefix('interventions')->group(function () {
         Route::get('/envoyees', [ResponsableIntervention::class, 'envoyees'])->name('responsable.interventions.envoyees');
         Route::get('/confirmer', [ResponsableIntervention::class, 'confirmer'])->name('responsable.interventions.confirmer');
+        Route::get('/devis', [ResponsableIntervention::class, 'devis'])->name('responsable.interventions.devis');
+        Route::get('/traitees', [ResponsableIntervention::class, 'traitees'])->name('responsable.interventions.traitees');
         Route::get('/accordees', [ResponsableIntervention::class, 'accordees'])->name('responsable.interventions.accordees');
         Route::post('/{intervention}/assign-finance', [ResponsableIntervention::class, 'assignFinance'])->name('responsable.interventions.assign_finance');
         Route::get('/{intervention}/details', [ResponsableIntervention::class, 'details'])->name('responsable.interventions.details');
@@ -186,6 +200,10 @@ Route::middleware(['auth:user', 'responsable'])->prefix('responsable')->group(fu
 Route::middleware(['auth:user', 'financier'])->prefix('financier')->group(function () {
     Route::get('/dashboard', [FinancierDashboard::class, 'dashboard'])->name('financier.dashboard');
     Route::match(['get', 'post'], '/logout', [FinancierDashboard::class, 'logout'])->name('financier.logout');
+
+    // Profil Financier
+    Route::get('/profile', [App\Http\Controllers\Financier\ProfileController::class, 'edit'])->name('financier.profile.edit');
+    Route::put('/profile', [App\Http\Controllers\Financier\ProfileController::class, 'update'])->name('financier.profile.update');
 
     Route::prefix('interventions')->name('financier.interventions.')->group(function () {
         Route::get('/paiements', [App\Http\Controllers\Financier\FinancierInterventionController::class, 'index'])->name('index');
@@ -208,6 +226,10 @@ Route::middleware(['auth:user', 'personnel'])->group(function () {
     // Espace Personnel
     Route::prefix('personnel')->name('personnel.')->group(function () {
         Route::get('/dashboard', [PersonnelDashboard::class, 'dashboard'])->name('dashboard');
+
+        // Profil Personnel
+        Route::get('/profile', [App\Http\Controllers\Personnel\ProfileController::class, 'edit'])->name('profile.edit');
+        Route::put('/profile', [App\Http\Controllers\Personnel\ProfileController::class, 'update'])->name('profile.update');
 
         // Interventions
         Route::prefix('interventions')->name('interventions.')->group(function () {

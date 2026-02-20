@@ -356,22 +356,22 @@
                                 @else
                                     <a href="{{ asset('storage/' . $intervention->rapport_path) }}" target="_blank"
                                         class="inline-flex items-center gap-4 p-5 bg-gray-50 rounded-2xl border border-gray-100 hover:bg-white hover:shadow-md transition-all group w-full md:w-auto">
-                                            <div
-                                                class="w-12 h-12 rounded-xl bg-red-100 text-red-600 flex items-center justify-center group-hover:bg-red-600 group-hover:text-white transition-all shadow-sm">
-                                                <i class="fas fa-file-pdf text-2xl"></i>
-                                            </div>
-                                            <div class="text-left">
-                                                <span class="block font-bold text-gray-900">Consulter le rapport PDF</span>
-                                                <span class="text-xs text-gray-500">Cliquez pour ouvrir dans un nouvel onglet</span>
-                                            </div>
-                                        </a>
+                                        <div
+                                            class="w-12 h-12 rounded-xl bg-red-100 text-red-600 flex items-center justify-center group-hover:bg-red-600 group-hover:text-white transition-all shadow-sm">
+                                            <i class="fas fa-file-pdf text-2xl"></i>
+                                        </div>
+                                        <div class="text-left">
+                                            <span class="block font-bold text-gray-900">Consulter le rapport PDF</span>
+                                            <span class="text-xs text-gray-500">Cliquez pour ouvrir dans un nouvel onglet</span>
+                                        </div>
+                                    </a>
                                 @endif
                             </div>
                         @endif
                     </div>
                 @endif
 
-                @if($intervention->document_1 || $intervention->document_2)
+                @if($intervention->document_1 || $intervention->document_2 || $intervention->documents->count() > 0)
                     <!-- Documents de Demande -->
                     <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
                         <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
@@ -445,6 +445,42 @@
                                     @endif
                                 </div>
                             @endif
+
+                            @foreach($intervention->documents as $doc)
+                                @php
+                                    $ext = pathinfo($doc->file_path, PATHINFO_EXTENSION);
+                                    $isImg = in_array(strtolower($ext), ['jpg', 'jpeg', 'png', 'gif', 'webp']);
+                                @endphp
+                                <div class="bg-blue-50/30 rounded-2xl p-4 border border-blue-100">
+                                    <span class="block text-xs uppercase font-bold text-blue-400 tracking-wider mb-3">Document
+                                        Supp.</span>
+                                    @if($isImg)
+                                        <a href="{{ asset('storage/' . $doc->file_path) }}" target="_blank" class="block group">
+                                            <div class="relative rounded-xl overflow-hidden border border-blue-200">
+                                                <img src="{{ asset('storage/' . $doc->file_path) }}"
+                                                    class="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-500">
+                                                <div
+                                                    class="absolute inset-0 bg-blue-900/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
+                                                    <i class="fas fa-search-plus text-xl"></i>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    @else
+                                        <a href="{{ asset('storage/' . $doc->file_path) }}" target="_blank"
+                                            class="flex items-center gap-3 p-3 bg-white rounded-xl border border-blue-100 hover:shadow-md transition-all group">
+                                            <div
+                                                class="w-10 h-10 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all">
+                                                <i class="fas fa-file-invoice"></i>
+                                            </div>
+                                            <div class="flex flex-col truncate">
+                                                <span
+                                                    class="text-sm font-bold text-gray-700 truncate">{{ $doc->original_name ?? 'Voir le document' }}</span>
+                                                <span class="text-[10px] text-gray-400 italic">Document joint</span>
+                                            </div>
+                                        </a>
+                                    @endif
+                                </div>
+                            @endforeach
                         </div>
                     </div>
                 @endif

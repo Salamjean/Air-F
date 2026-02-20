@@ -25,7 +25,7 @@
         </div>
 
         <!-- Stats Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-10">
             <!-- Total Interventions -->
             <div
                 class="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all group overflow-hidden relative">
@@ -37,16 +37,14 @@
                         class="w-12 h-12 rounded-2xl bg-gray-900 text-white flex items-center justify-center mb-4 shadow-lg shadow-gray-200">
                         <i class="fas fa-folder-open text-xl"></i>
                     </div>
-                    <span class="block text-sm font-bold text-gray-400 uppercase tracking-widest mb-1">Total
-                        Interventions</span>
+                    <span class="block text-sm font-bold text-gray-400 uppercase tracking-widest mb-1">Total</span>
                     <div class="flex items-baseline gap-2">
                         <span class="text-3xl font-black text-gray-900">{{ $stats['total'] }}</span>
-                        <span class="text-xs font-bold text-gray-400">Dossiers</span>
                     </div>
                 </div>
             </div>
 
-            <!-- En Attente (Envoyées) -->
+            <!-- Envoyées -->
             <div
                 class="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all group overflow-hidden relative">
                 <div
@@ -57,11 +55,9 @@
                         class="w-12 h-12 rounded-2xl bg-blue-500 text-white flex items-center justify-center mb-4 shadow-lg shadow-blue-200">
                         <i class="fas fa-paper-plane text-xl"></i>
                     </div>
-                    <span class="block text-sm font-bold text-blue-400 uppercase tracking-widest mb-1">Envoyées / En
-                        attente</span>
+                    <span class="block text-sm font-bold text-blue-400 uppercase tracking-widest mb-1">Envoyées</span>
                     <div class="flex items-baseline gap-2">
                         <span class="text-3xl font-black text-gray-900">{{ $stats['envoyees'] }}</span>
-                        <span class="text-xs font-bold text-blue-500">Action requise</span>
                     </div>
                 </div>
             </div>
@@ -77,10 +73,45 @@
                         class="w-12 h-12 rounded-2xl bg-orange-500 text-white flex items-center justify-center mb-4 shadow-lg shadow-orange-200">
                         <i class="fas fa-clock text-xl"></i>
                     </div>
-                    <span class="block text-sm font-bold text-orange-400 uppercase tracking-widest mb-1">À Confirmer</span>
+                    <span class="block text-sm font-bold text-orange-400 uppercase tracking-widest mb-1">Factures</span>
                     <div class="flex items-baseline gap-2">
                         <span class="text-3xl font-black text-gray-900">{{ $stats['confirmer'] }}</span>
-                        <span class="text-xs font-bold text-orange-500">Finalisation</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rapports Reçus -->
+            <div
+                class="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all group overflow-hidden relative">
+                <div
+                    class="absolute -right-4 -top-4 w-24 h-24 bg-purple-50 rounded-full group-hover:scale-110 transition-transform duration-500">
+                </div>
+                <div class="relative z-10">
+                    <div
+                        class="w-12 h-12 rounded-2xl bg-purple-500 text-white flex items-center justify-center mb-4 shadow-lg shadow-purple-200">
+                        <i class="fas fa-tasks text-xl"></i>
+                    </div>
+                    <span class="block text-sm font-bold text-purple-400 uppercase tracking-widest mb-1">Rapports</span>
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-3xl font-black text-gray-900">{{ $stats['traitees'] }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Devis Reçus -->
+            <div
+                class="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all group overflow-hidden relative">
+                <div
+                    class="absolute -right-4 -top-4 w-24 h-24 bg-yellow-50 rounded-full group-hover:scale-110 transition-transform duration-500">
+                </div>
+                <div class="relative z-10">
+                    <div
+                        class="w-12 h-12 rounded-2xl bg-yellow-500 text-white flex items-center justify-center mb-4 shadow-lg shadow-yellow-200">
+                        <i class="fas fa-file-invoice-dollar text-xl"></i>
+                    </div>
+                    <span class="block text-sm font-bold text-yellow-400 uppercase tracking-widest mb-1">Devis</span>
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-3xl font-black text-gray-900">{{ $stats['devis'] }}</span>
                     </div>
                 </div>
             </div>
@@ -96,11 +127,9 @@
                         class="w-12 h-12 rounded-2xl bg-green-500 text-white flex items-center justify-center mb-4 shadow-lg shadow-green-200">
                         <i class="fas fa-check-double text-xl"></i>
                     </div>
-                    <span class="block text-sm font-bold text-green-400 uppercase tracking-widest mb-1">Règlements
-                        Effectués</span>
+                    <span class="block text-sm font-bold text-green-400 uppercase tracking-widest mb-1">Payées</span>
                     <div class="flex items-baseline gap-2">
                         <span class="text-3xl font-black text-gray-900">{{ $stats['payees'] }}</span>
-                        <span class="text-xs font-bold text-green-500 text-emerald-500">Clôturées</span>
                     </div>
                 </div>
             </div>

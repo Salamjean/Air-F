@@ -30,7 +30,6 @@ class ResponsableIntervention extends Controller
     public function confirmer(Request $request)
     {
         $query = Intervention::where('statut', 'facture')
-            ->where('responsable_id', auth('user')->id())
             ->with(['personnels', 'prestataire']);
 
         if ($request->has('search') && !empty($request->search)) {
@@ -45,10 +44,43 @@ class ResponsableIntervention extends Controller
         return view('responsable.interventions.confirmer', compact('interventions'));
     }
 
+    public function devis(Request $request)
+    {
+        $query = Intervention::where('statut', 'devis')
+            ->with(['personnels', 'prestataire']);
+
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('code', 'like', "%{$search}%")
+                    ->orWhere('reference', 'like', "%{$search}%");
+            });
+        }
+
+        $interventions = $query->latest()->get();
+        return view('responsable.interventions.devis', compact('interventions'));
+    }
+
+    public function traitees(Request $request)
+    {
+        $query = Intervention::where('statut', 'traiter')
+            ->with(['personnels', 'prestataire']);
+
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('code', 'like', "%{$search}%")
+                    ->orWhere('reference', 'like', "%{$search}%");
+            });
+        }
+
+        $interventions = $query->latest()->get();
+        return view('responsable.interventions.traitees', compact('interventions'));
+    }
+
     public function accordees(Request $request)
     {
         $query = Intervention::whereIn('statut', ['accord'])
-            ->where('responsable_id', auth('user')->id())
             ->with(['personnels', 'prestataire', 'responsable']);
 
         if ($request->has('search') && !empty($request->search)) {
@@ -103,7 +135,6 @@ class ResponsableIntervention extends Controller
     public function historique(Request $request)
     {
         $query = Intervention::where('statut', 'payer')
-            ->where('responsable_id', auth('user')->id())
             ->with(['personnels', 'prestataire']);
 
         if ($request->has('search') && !empty($request->search)) {
@@ -120,7 +151,7 @@ class ResponsableIntervention extends Controller
 
     public function details(Intervention $intervention)
     {
-        $intervention->load(['personnels', 'prestataire', 'site', 'forfait', 'forfaitTasks', 'equipements']);
+        $intervention->load(['personnels', 'prestataire', 'site', 'forfait', 'forfaitTasks', 'equipements', 'documents']);
         return view('responsable.interventions.details', compact('intervention'));
     }
 }

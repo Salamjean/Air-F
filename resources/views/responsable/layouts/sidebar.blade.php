@@ -42,6 +42,32 @@
             @endif
         </a>
 
+        <a href="{{ route('responsable.interventions.traitees') }}"
+            class="flex items-center justify-between px-6 py-3 {{ request()->routeIs('responsable.interventions.traitees') ? 'bg-gray-800 text-gray-100 border-l-4 border-red-500' : 'text-gray-400 hover:bg-gray-800 hover:text-gray-100' }} transition-all">
+            <div class="flex items-center">
+                <i class="fas fa-tasks w-6 text-sm"></i>
+                <span class="mx-3 font-medium">Rapports Reçus</span>
+            </div>
+            @if(isset($countTraiterResponsable) && $countTraiterResponsable > 0)
+                <span class="bg-purple-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                    {{ $countTraiterResponsable }}
+                </span>
+            @endif
+        </a>
+
+        <a href="{{ route('responsable.interventions.devis') }}"
+            class="flex items-center justify-between px-6 py-3 {{ request()->routeIs('responsable.interventions.devis') ? 'bg-gray-800 text-gray-100 border-l-4 border-red-500' : 'text-gray-400 hover:bg-gray-800 hover:text-gray-100' }} transition-all">
+            <div class="flex items-center">
+                <i class="fas fa-file-invoice-dollar w-6 text-sm"></i>
+                <span class="mx-3 font-medium">Devis Reçus</span>
+            </div>
+            @if(isset($countDevisResponsable) && $countDevisResponsable > 0)
+                <span class="bg-yellow-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                    {{ $countDevisResponsable }}
+                </span>
+            @endif
+        </a>
+
         <a href="{{ route('responsable.interventions.accordees') }}"
             class="flex items-center justify-between px-6 py-3 {{ request()->routeIs('responsable.interventions.accordees') ? 'bg-gray-800 text-gray-100 border-l-4 border-red-500' : 'text-gray-400 hover:bg-gray-800 hover:text-gray-100' }} transition-all">
             <div class="flex items-center">
