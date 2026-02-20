@@ -141,7 +141,7 @@
                                             <option value="" class="text-gray-500">Aucun forfait (Saisie libre)</option>
                                             @foreach ($forfaits as $forfait)
                                                 <option value="{{ $forfait->id }}" data-price="{{ $forfait->price }}" {{ old('forfait_id') == $forfait->id ? 'selected' : '' }}>
-                                                    {{ $forfait->name }} : {{ $forfait->label }} ({{ number_format($forfait->price, 2) }} €)
+                                                    {{ $forfait->name }} : {{ $forfait->label }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -152,6 +152,7 @@
                                 </div>
 
                                 <!-- Montant -->
+                                @if(Auth::user()->role === 'admin')
                                 <div class="mt-6">
                                     <label for="montant" class="block text-sm font-bold text-[#111827] mb-2">Montant H.T par agent (€)</label>
                                     <div class="relative group">
@@ -166,6 +167,9 @@
                                         <p class="text-red-600 text-xs mt-1 font-bold">{{ $message }}</p>
                                     @enderror
                                 </div>
+                                @else
+                                <input type="hidden" name="montant" id="montant" value="{{ old('montant') }}">
+                                @endif
 
                                 <!-- Date Fields -->
                                 <div class="grid grid-cols-2 gap-4 mt-6">
