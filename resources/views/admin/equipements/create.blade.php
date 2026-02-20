@@ -55,19 +55,6 @@
                                     @endforeach
                                 </select>
                             </div>
-
-                            <div>
-                                <label for="site_id" class="block text-sm font-medium text-gray-700 mb-2">Site de stockage</label>
-                                <select name="site_id" id="site_id" required
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all bg-white">
-                                    <option value="">Sélectionner un site</option>
-                                    @foreach($sites as $site)
-                                        <option value="{{ $site->id }}" {{ old('site_id') == $site->id ? 'selected' : '' }}>
-                                            {{ $site->name }} ({{ $site->code }})
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
                         </div>
 
                         <!-- Right Column -->
@@ -94,11 +81,22 @@
                                 <input type="number" name="stock_min_alert" id="stock_min_alert"
                                     value="{{ old('stock_min_alert', 5) }}" min="0" required
                                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all">
-                                <p class="text-[10px] text-gray-500 mt-1 italic">Vous serez alerté quand le stock sera
-                                    inférieur ou égal à ce nombre.</p>
                             </div>
 
                             <div>
+                                <label for="site_id" class="block text-sm font-medium text-gray-700 mb-2">Site de stockage</label>
+                                <select name="site_id" id="site_id" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all bg-white">
+                                    <option value="">Sélectionner un site</option>
+                                    @foreach($sites as $site)
+                                        <option value="{{ $site->id }}" {{ old('site_id') == $site->id ? 'selected' : '' }}>
+                                            {{ $site->name }} ({{ $site->code }})
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <!-- <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Image du consommable</label>
                                 <div class="flex items-center justify-center w-full">
                                     <label for="image"
@@ -112,7 +110,7 @@
                                         <input id="image" name="image" type="file" class="hidden" accept="image/*" />
                                     </label>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
 

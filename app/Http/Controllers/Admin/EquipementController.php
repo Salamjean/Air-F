@@ -8,6 +8,8 @@ use App\Models\EquipementCategory;
 use App\Models\Intervention;
 use App\Models\StockMovement;
 use App\Models\Site;
+use App\Exports\EquipementExport;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -17,7 +19,10 @@ class EquipementController extends Controller
     public function index(Request $request)
     {
         $categories = EquipementCategory::all();
+        $sites = Site::all();
         $categoryId = $request->get('category_id');
+        $siteId = $request->get('site_id');
+        $lowStock = $request->has('low_stock');
 
         $query = Equipement::with(['category', 'creator', 'sites']);
 
@@ -25,9 +30,19 @@ class EquipementController extends Controller
             $query->where('category_id', $categoryId);
         }
 
+        if ($siteId) {
+            $query->whereHas('sites', function ($q) use ($siteId) {
+                $q->where('site_id', $siteId);
+            });
+        }
+
+        if ($lowStock) {
+            $query->where('stock_quantity', '<=', 5);
+        }
+
         $equipements = $query->latest()->get();
 
-        return view('admin.equipements.index', compact('equipements', 'categories', 'categoryId'));
+        return view('admin.equipements.index', compact('equipements', 'categories', 'sites', 'categoryId', 'siteId', 'lowStock'));
     }
 
     public function create()
@@ -187,5 +202,25 @@ class EquipementController extends Controller
             ->withQueryString();
 
         return view('admin.equipements.history', compact('usageHistory', 'search'));
+    }
+
+    public function export(Request $request)
+    {
+        $categoryId = $request->get('category_id');
+        $siteId = $request->get('site_id');
+        $lowStock = $request->has('low_stock');
+
+        $siteName = null;
+        if ($siteId) {
+            $site = Site::find($siteId);
+            $siteName = $site ? $site->name : null;
+        }
+
+        $fileName = 'consommables-' . now()->format('d-m-Y-H-i') . '.xlsx';
+
+        return Excel::download(
+            new EquipementExport($categoryId, $siteId, $lowStock, $siteName),
+            $fileName
+        );
     }
 }

@@ -79,6 +79,7 @@ Route::middleware(['auth:user', 'admin'])->prefix('admin')->group(function () {
 
     // Gestion des équipements et catégories
     Route::get('equipements/history', [EquipementController::class, 'history'])->name('admin.equipements.history');
+    Route::get('equipements/export', [EquipementController::class, 'export'])->name('admin.equipements.export');
     Route::post('equipements/{equipement}/recharge', [EquipementController::class, 'recharge'])->name('admin.equipements.recharge');
     Route::resource('equipements', EquipementController::class, ['as' => 'admin'])->names([
         'index' => 'admin.equipements.index',

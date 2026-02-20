@@ -18,14 +18,58 @@
             </div>
         </div>
 
+        <!-- Filters -->
+        <form action="{{ route('admin.equipements.index') }}" method="GET"
+            class="bg-white p-6 rounded-xl border border-gray-200 mb-6 shadow-sm">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
+                <div>
+                    <label for="site_id" class="block text-sm font-medium text-gray-700 mb-2">Filtrer par Site</label>
+                    <select name="site_id" id="site_id" onchange="this.form.submit()"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all text-sm bg-gray-50">
+                        <option value="">Tous les sites</option>
+                        @foreach($sites as $site)
+                            <option value="{{ $site->id }}" {{ $siteId == $site->id ? 'selected' : '' }}>{{ $site->name }}
+                                ({{ $site->code }})</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="flex items-center pb-2">
+                    <label class="relative inline-flex items-center cursor-pointer group">
+                        <input type="checkbox" name="low_stock" value="1" {{ $lowStock ? 'checked' : '' }}
+                            onchange="this.form.submit()" class="sr-only peer">
+                        <div
+                            class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600">
+                        </div>
+                        <span class="ml-3 text-sm font-bold text-gray-700 group-hover:text-red-600 transition-colors">Alerte
+                            Stock Bas (≤ 5)</span>
+                    </label>
+                </div>
+
+                <div class="flex justify-end gap-3">
+                    <button type="button" onclick="exportToExcel()"
+                        class="text-sm bg-green-100 text-green-700 hover:bg-green-200 px-4 py-2 rounded-lg font-bold flex items-center transition-colors">
+                        <i class="fas fa-file-excel mr-2"></i> Exporter Excel
+                    </button>
+                    <a href="{{ route('admin.equipements.index') }}"
+                        class="text-sm text-red-600 hover:text-red-800 font-bold flex items-center transition-colors">
+                        <i class="fas fa-times-circle mr-2"></i> Réinitialiser les filtres
+                    </a>
+                </div>
+            </div>
+            @if($categoryId)
+                <input type="hidden" name="category_id" value="{{ $categoryId }}">
+            @endif
+        </form>
+
         <!-- Category Tabs -->
         <div class="mb-6 flex flex-wrap gap-2">
-            <a href="{{ route('admin.equipements.index') }}"
+            <a href="{{ route('admin.equipements.index', array_merge(request()->except('category_id'))) }}"
                 class="px-5 py-2 rounded-full text-sm font-medium transition-all {{ !$categoryId ? 'bg-red-600 text-white shadow-md' : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200' }}">
                 Tous les consommables
             </a>
             @foreach($categories as $category)
-                <a href="{{ route('admin.equipements.index', ['category_id' => $category->id]) }}"
+                <a href="{{ route('admin.equipements.index', array_merge(request()->all(), ['category_id' => $category->id])) }}"
                     class="px-5 py-2 rounded-full text-sm font-medium transition-all {{ $categoryId == $category->id ? 'bg-red-600 text-white shadow-md' : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200' }}">
                     {{ $category->name }}
                 </a>
@@ -242,6 +286,12 @@
             const modal = document.getElementById('rechargeModal');
             modal.classList.add('hidden');
             document.body.style.overflow = 'auto';
+        }
+
+        function exportToExcel() {
+            const form = document.querySelector('form[action="{{ route('admin.equipements.index') }}"]');
+            const params = new URLSearchParams(new FormData(form)).toString();
+            window.location.href = "{{ route('admin.equipements.export') }}?" + params;
         }
     </script>
 @endsection
