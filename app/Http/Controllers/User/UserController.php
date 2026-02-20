@@ -29,14 +29,14 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'prenom' => 'required|string|max:255',
+            'prenom' => $request->role === 'prestataire' ? 'nullable|string|max:255' : 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'contact' => 'required|string|max:255',
             'role' => 'required|string|max:255',
             'adresse' => 'required|string|max:255',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ], [
-            'name.required' => 'Le nom est requis',
+            'name.required' => $request->role === 'prestataire' ? 'Le nom du prestataire est requis' : 'Le nom est requis',
             'prenom.required' => 'Le prénom est requis',
             'email.required' => 'L\'email est requis',
             'email.unique' => 'Cet email est déjà utilisé.',
@@ -109,14 +109,14 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'prenom' => 'required|string|max:255',
+            'prenom' => $request->role === 'prestataire' ? 'nullable|string|max:255' : 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
             'contact' => 'required|string|max:255',
             'role' => 'required|string|max:255',
             'adresse' => 'required|string|max:255',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ], [
-            'name.required' => 'Le nom est requis',
+            'name.required' => $request->role === 'prestataire' ? 'Le nom du prestataire est requis' : 'Le nom est requis',
             'prenom.required' => 'Le prénom est requis',
             'email.required' => 'L\'email est requis',
             'email.unique' => 'Cet email est déjà utilisé.',

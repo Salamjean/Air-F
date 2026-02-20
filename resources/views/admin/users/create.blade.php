@@ -36,15 +36,37 @@
                             </div>
                             <div>
                                 <h3 class="text-lg font-bold text-gray-800">Informations du Compte</h3>
-                                <p class="text-xs text-gray-500">Remplissez les détails pour créer un nouvel utilisateur.
-                                </p>
+                                <p class="text-xs text-gray-500">Remplissez les détails pour créer un nouvel utilisateur.</p>
                             </div>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <!-- Rôle (Déplacé en haut pour déterminer l'affichage) -->
+                            <div class="relative">
+                                <label for="role"
+                                    class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Rôle
+                                    <span class="text-red-500">*</span></label>
+                                <div class="relative">
+                                    <span
+                                        class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                                        <i class="fas fa-user-tag"></i>
+                                    </span>
+                                    <select name="role" id="role" onchange="toggleFields()"
+                                        class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-red-500 transition-all outline-none text-gray-700 appearance-none">
+                                        <option value="responsable" {{ old('role') == 'responsable' ? 'selected' : '' }}>Responsable AF</option>
+                                        <option value="prestataire" {{ old('role') == 'prestataire' ? 'selected' : '' }}>Prestataire</option>
+                                        <option value="finance" {{ old('role') == 'finance' ? 'selected' : '' }}>Financier</option>
+                                    </select>
+                                    <span
+                                        class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400">
+                                        <i class="fas fa-chevron-down text-xs"></i>
+                                    </span>
+                                </div>
+                            </div>
+
                             <!-- Nom -->
                             <div class="relative">
-                                <label for="name"
+                                <label for="name" id="name_label"
                                     class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Nom
                                     <span class="text-red-500">*</span></label>
                                 <div class="relative">
@@ -52,14 +74,14 @@
                                         class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                                         <i class="fas fa-signature"></i>
                                     </span>
-                                    <input type="text" name="name" id="name" 
+                                    <input type="text" name="name" id="name" value="{{ old('name') }}"
                                         class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-red-500 transition-all outline-none text-gray-700 placeholder-gray-400"
                                         placeholder="Ex: KADIO">
                                 </div>
                             </div>
 
                             <!-- Prénom -->
-                            <div class="relative">
+                            <div class="relative" id="prenom_container">
                                 <label for="prenom"
                                     class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Prénom
                                     <span class="text-red-500">*</span></label>
@@ -68,7 +90,7 @@
                                         class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                                         <i class="fas fa-signature"></i>
                                     </span>
-                                    <input type="text" name="prenom" id="prenom" 
+                                    <input type="text" name="prenom" id="prenom" value="{{ old('prenom') }}"
                                         class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-red-500 transition-all outline-none text-gray-700 placeholder-gray-400"
                                         placeholder="Ex: Eric">
                                 </div>
@@ -84,7 +106,7 @@
                                         class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                                         <i class="fas fa-envelope"></i>
                                     </span>
-                                    <input type="email" name="email" id="email" 
+                                    <input type="email" name="email" id="email" value="{{ old('email') }}"
                                         class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-red-500 transition-all outline-none text-gray-700 placeholder-gray-400"
                                         placeholder="nom@exemple.com">
                                 </div>
@@ -100,7 +122,7 @@
                                         class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                                         <i class="fas fa-phone-alt"></i>
                                     </span>
-                                    <input type="tel" name="contact" id="contact" 
+                                    <input type="tel" name="contact" id="contact" value="{{ old('contact') }}"
                                         class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-red-500 transition-all outline-none text-gray-700 placeholder-gray-400"
                                         placeholder="Ex: 0102030405">
                                 </div>
@@ -115,32 +137,9 @@
                                         class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                                         <i class="fas fa-map-marker-alt"></i>
                                     </span>
-                                    <input type="text" name="adresse" id="adresse"
+                                    <input type="text" name="adresse" id="adresse" value="{{ old('adresse') }}"
                                         class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-red-500 transition-all outline-none text-gray-700 placeholder-gray-400"
                                         placeholder="Ex: Cocody">
-                                </div>
-                            </div>
-
-                            <!-- Rôle -->
-                            <div class="relative">
-                                <label for="role"
-                                    class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Rôle
-                                    <span class="text-red-500">*</span></label>
-                                <div class="relative">
-                                    <span
-                                        class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                                        <i class="fas fa-user-tag"></i>
-                                    </span>
-                                    <select name="role" id="role" 
-                                        class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-red-500 transition-all outline-none text-gray-700 appearance-none">
-                                        <option value="responsable">Responsable AF</option>
-                                        <option value="prestataire">Prestataire</option>
-                                        <option value="finance">Financier</option>
-                                    </select>
-                                    <span
-                                        class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400">
-                                        <i class="fas fa-chevron-down text-xs"></i>
-                                    </span>
                                 </div>
                             </div>
 
@@ -202,6 +201,18 @@
                                             </div>
                                         </div>
                                     </div>
+                                    
+                                    <!-- Zone d'aperçu de l'image -->
+                                    <div class="w-32 h-32 flex-shrink-0">
+                                        <div id="imagePreview"
+                                            class="w-full h-full rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 flex flex-col items-center justify-center overflow-hidden transition-all duration-300">
+                                            <div id="previewPlaceholder" class="text-center p-4">
+                                                <i class="fas fa-user text-gray-300 text-3xl mb-2"></i>
+                                                <p class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Aperçu</p>
+                                            </div>
+                                            <img id="previewImage" src="" alt="Aperçu" class="hidden w-full h-full object-cover">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -210,7 +221,7 @@
                     <!-- Footer Actions -->
                     <div class="flex items-center justify-end pt-6 border-t border-gray-100">
                         <button type="reset"
-                            class="px-6 py-3 mr-4 text-gray-500 hover:text-gray-700 font-medium transition-colors">
+                            class="px-6 py-3 mr-4 text-gray-500 hover:text-gray-700 font-medium transition-colors" onclick="setTimeout(toggleFields, 10)">
                             Annuler
                         </button>
                         <button type="submit"
@@ -226,6 +237,26 @@
 
 @push('scripts')
     <script>
+        function toggleFields() {
+            const role = document.getElementById('role').value;
+            const prenomContainer = document.getElementById('prenom_container');
+            const nameLabel = document.getElementById('name_label');
+            const nameInput = document.getElementById('name');
+
+            if (role === 'prestataire') {
+                prenomContainer.classList.add('hidden');
+                nameLabel.innerHTML = 'Nom du prestataire <span class="text-red-500">*</span>';
+                nameInput.placeholder = 'Ex: SOS SÉCURITÉ';
+            } else {
+                prenomContainer.classList.remove('hidden');
+                nameLabel.innerHTML = 'Nom <span class="text-red-500">*</span>';
+                nameInput.placeholder = 'Ex: KADIO';
+            }
+        }
+
+        // Exécuter au chargement
+        document.addEventListener('DOMContentLoaded', toggleFields);
+
         function previewImage(event) {
             const input = event.target;
             const preview = document.getElementById('previewImage');
@@ -246,11 +277,9 @@
 
                 reader.readAsDataURL(file);
 
-                // Afficher le nom du fichier
                 selectedFileName.textContent = file.name;
                 fileNameDisplay.classList.remove('hidden');
 
-                // Changer le style de la zone d'aperçu
                 imagePreview.classList.remove('border-dashed', 'border-gray-300');
                 imagePreview.classList.add('border-solid', 'border-red-500', 'shadow-md');
             }
@@ -263,21 +292,16 @@
             const fileNameDisplay = document.getElementById('fileNameDisplay');
             const imagePreview = document.getElementById('imagePreview');
 
-            // Réinitialiser l'input file
             input.value = '';
-
-            // Cacher l'aperçu
             preview.src = '';
             preview.classList.add('hidden');
             placeholder.classList.remove('hidden');
             fileNameDisplay.classList.add('hidden');
 
-            // Réinitialiser le style
             imagePreview.classList.remove('border-solid', 'border-red-500', 'shadow-md');
             imagePreview.classList.add('border-dashed', 'border-gray-300');
         }
 
-        // Gestion du drag & drop
         const dropZone = document.querySelector('label[for="profile_picture"]');
 
         if (dropZone) {
@@ -299,7 +323,6 @@
                 if (files.length > 0) {
                     const input = document.getElementById('profile_picture');
                     input.files = files;
-                    // Déclencher manuellement l'événement change
                     const event = new Event('change', { bubbles: true });
                     input.dispatchEvent(event);
                 }

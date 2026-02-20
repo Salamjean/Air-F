@@ -42,9 +42,33 @@
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <!-- Rôle (Placé en haut pour déterminer l'affichage) -->
+                            <div class="relative">
+                                <label for="role"
+                                    class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Rôle
+                                    <span class="text-red-500">*</span></label>
+                                <div class="relative">
+                                    <span
+                                        class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                                        <i class="fas fa-user-tag"></i>
+                                    </span>
+                                    <select name="role" id="role" onchange="toggleFields()"
+                                        class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-red-500 transition-all outline-none text-gray-700 appearance-none">
+                                        <option value="responsable" {{ old('role', $user->role) == 'responsable' ? 'selected' : '' }}>Responsable AF</option>
+                                        <option value="prestataire" {{ old('role', $user->role) == 'prestataire' ? 'selected' : '' }}>Prestataire</option>
+                                        <option value="finance" {{ old('role', $user->role) == 'finance' ? 'selected' : '' }}>
+                                            Financier</option>
+                                    </select>
+                                    <span
+                                        class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400">
+                                        <i class="fas fa-chevron-down text-xs"></i>
+                                    </span>
+                                </div>
+                            </div>
+
                             <!-- Nom -->
                             <div class="relative">
-                                <label for="name"
+                                <label for="name" id="name_label"
                                     class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Nom
                                     <span class="text-red-500">*</span></label>
                                 <div class="relative">
@@ -59,7 +83,7 @@
                             </div>
 
                             <!-- Prénom -->
-                            <div class="relative">
+                            <div class="relative" id="prenom_container">
                                 <label for="prenom"
                                     class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Prénom
                                     <span class="text-red-500">*</span></label>
@@ -123,30 +147,6 @@
                                 </div>
                             </div>
 
-                            <!-- Rôle -->
-                            <div class="relative">
-                                <label for="role"
-                                    class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Rôle
-                                    <span class="text-red-500">*</span></label>
-                                <div class="relative">
-                                    <span
-                                        class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                                        <i class="fas fa-user-tag"></i>
-                                    </span>
-                                    <select name="role" id="role"
-                                        class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-red-100 focus:border-red-500 transition-all outline-none text-gray-700 appearance-none">
-                                        <option value="responsable" {{ old('role', $user->role) == 'responsable' ? 'selected' : '' }}>Responsable AF</option>
-                                        <option value="prestataire" {{ old('role', $user->role) == 'prestataire' ? 'selected' : '' }}>Prestataire</option>
-                                        <option value="finance" {{ old('role', $user->role) == 'finance' ? 'selected' : '' }}>
-                                            Financier</option>
-                                    </select>
-                                    <span
-                                        class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400">
-                                        <i class="fas fa-chevron-down text-xs"></i>
-                                    </span>
-                                </div>
-                            </div>
-
                             <!-- Photo - Version améliorée avec aperçu -->
                             <div class="relative md:col-span-3">
                                 <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Photo
@@ -173,7 +173,6 @@
                                                 alt="Aperçu avatar"
                                                 class="{{ $user->profile_picture ? '' : 'hidden' }} w-full h-full object-cover">
                                         </div>
-                                        <p class="text-xs text-gray-400 text-center mt-2">Aperçu</p>
                                     </div>
 
                                     <!-- Zone de téléchargement -->
@@ -258,6 +257,26 @@
 
 @push('scripts')
     <script>
+        function toggleFields() {
+            const role = document.getElementById('role').value;
+            const prenomContainer = document.getElementById('prenom_container');
+            const nameLabel = document.getElementById('name_label');
+            const nameInput = document.getElementById('name');
+
+            if (role === 'prestataire') {
+                prenomContainer.classList.add('hidden');
+                nameLabel.innerHTML = 'Nom du prestataire <span class="text-red-500">*</span>';
+                nameInput.placeholder = 'Ex: SOS SÉCURITÉ';
+            } else {
+                prenomContainer.classList.remove('hidden');
+                nameLabel.innerHTML = 'Nom <span class="text-red-500">*</span>';
+                nameInput.placeholder = 'Ex: KADIO';
+            }
+        }
+
+        // Exécuter au chargement
+        document.addEventListener('DOMContentLoaded', toggleFields);
+
         function previewImage(event) {
             const input = event.target;
             const preview = document.getElementById('previewImage');
@@ -278,11 +297,9 @@
 
                 reader.readAsDataURL(file);
 
-                // Afficher le nom du fichier
                 selectedFileName.textContent = file.name;
                 fileNameDisplay.classList.remove('hidden');
 
-                // Changer le style de la zone d'aperçu
                 imagePreview.classList.remove('border-dashed', 'border-gray-300');
                 imagePreview.classList.add('border-solid', 'border-red-500', 'shadow-md');
             }
@@ -295,29 +312,16 @@
             const fileNameDisplay = document.getElementById('fileNameDisplay');
             const imagePreview = document.getElementById('imagePreview');
 
-            // Réinitialiser l'input file
             input.value = '';
-
-            // Cacher l'aperçu si pas d'image précédente, ou remettre l'ancienne ?
-            // Pour l'instant on reset tout comme si on annulait l'upload
-            // Idéalement on remettrait l'image originale, mais c'est complexe sans rechargement.
-            // On va juste masquer l'aperçu courant et réafficher le placeholder (ou l'image initiale si on gérait mieux le JS).
-            // Simplification : on masque tout, l'utilisateur devra rafraichir ou re-selectionner s'il a fait une erreur.
-
-            // Note: pour un edit, si on annule l'upload, on voudrait peut-etre revoir l'image serveur. 
-            // Mais le plus simple UI : on vide le champ input. L'utilisateur n'envoie rien = pas de modif photo.
-
             preview.src = '';
             preview.classList.add('hidden');
             placeholder.classList.remove('hidden');
             fileNameDisplay.classList.add('hidden');
 
-            // Réinitialiser le style
             imagePreview.classList.remove('border-solid', 'border-red-500', 'shadow-md');
             imagePreview.classList.add('border-dashed', 'border-gray-300');
         }
 
-        // Gestion du drag & drop
         const dropZone = document.querySelector('label[for="profile_picture"]');
 
         if (dropZone) {
@@ -339,7 +343,6 @@
                 if (files.length > 0) {
                     const input = document.getElementById('profile_picture');
                     input.files = files;
-                    // Déclencher manuellement l'événement change
                     const event = new Event('change', { bubbles: true });
                     input.dispatchEvent(event);
                 }
