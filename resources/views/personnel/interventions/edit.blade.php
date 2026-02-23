@@ -190,8 +190,7 @@
                                                             $siteStock = $equip->sites()->where('sites.id', $intervention->site_id)->first()?->pivot->quantity ?? 0;
                                                         @endphp
                                                         <option value="{{ $equip->id }}">
-                                                            {{ $equip->name }} (En stock sur site: {{ $siteStock }}
-                                                            {{ $equip->unit }})
+                                                            {{ $equip->name }} ({{ $equip->category->name }} - {{ $equip->longueur }}m, {{ $equip->type }})
                                                         </option>
                                                     @endforeach
                                                 </select>
