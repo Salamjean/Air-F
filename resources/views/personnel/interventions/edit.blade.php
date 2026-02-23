@@ -85,6 +85,15 @@
                             @endif
                         </div>
                     </div>
+
+                    <!-- Mission Logo Card -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 flex flex-col items-center justify-center group transition-all duration-300 hover:shadow-md">
+                        <div class="relative w-full h-32 flex items-center justify-center">
+                            <img src="{{ asset('assets/img/grouppp.png') }}" 
+                                 alt="Logo Mission" 
+                                 class="max-w-full max-h-full object-contain transform group-hover:scale-105 transition-transform duration-500">
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Right Column: Reporting Form -->
@@ -190,7 +199,8 @@
                                                             $siteStock = $equip->sites()->where('sites.id', $intervention->site_id)->first()?->pivot->quantity ?? 0;
                                                         @endphp
                                                         <option value="{{ $equip->id }}">
-                                                            {{ $equip->name }} ({{ $equip->category->name }} - {{ $equip->longueur }}m, {{ $equip->type }})
+                                                            {{ $equip->name }} ({{ $equip->category->name }} -
+                                                            {{ $equip->longueur }}m, {{ $equip->type }})
                                                         </option>
                                                     @endforeach
                                                 </select>
@@ -364,23 +374,23 @@
                 const rowId = `equipment-select-${equipmentIndex}`;
                 newRow.className = 'equipment-row grid grid-cols-1 sm:grid-cols-7 gap-4 items-end bg-white p-4 rounded-xl border border-slate-200 shadow-sm relative group animate-in slide-in-from-top-2 duration-300';
                 newRow.innerHTML = `
-                                    <div class="sm:col-span-4 space-y-2">
-                                        <label class="text-xs font-bold text-slate-500 uppercase">Consommable</label>
-                                        <select name="equipements[${equipmentIndex}][id]" id="${rowId}" class="equipment-select block w-full"></select>
-                                    </div>
-                                    <div class="sm:col-span-2 space-y-2">
-                                        <label class="text-xs font-bold text-slate-500 uppercase">Quantité utilisé</label>
-                                        <input type="number" name="equipements[${equipmentIndex}][quantity]" min="1" 
-                                            class="block w-full px-4 py-2.5 h-12 rounded-xl border border-slate-300 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 text-sm transition-all outline-none bg-slate-50"
-                                            placeholder="0">
-                                    </div>
-                                    <div class="sm:col-span-1 flex justify-center pb-1">
-                                        <button type="button" onclick="removeEquipmentRow(this, '${rowId}')" 
-                                            class="text-slate-400 hover:text-red-600 transition-colors p-2 rounded-full hover:bg-red-50 opacity-100">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </div>
-                                `;
+                                            <div class="sm:col-span-4 space-y-2">
+                                                <label class="text-xs font-bold text-slate-500 uppercase">Consommable</label>
+                                                <select name="equipements[${equipmentIndex}][id]" id="${rowId}" class="equipment-select block w-full"></select>
+                                            </div>
+                                            <div class="sm:col-span-2 space-y-2">
+                                                <label class="text-xs font-bold text-slate-500 uppercase">Quantité utilisé</label>
+                                                <input type="number" name="equipements[${equipmentIndex}][quantity]" min="1" 
+                                                    class="block w-full px-4 py-2.5 h-12 rounded-xl border border-slate-300 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 text-sm transition-all outline-none bg-slate-50"
+                                                    placeholder="0">
+                                            </div>
+                                            <div class="sm:col-span-1 flex justify-center pb-1">
+                                                <button type="button" onclick="removeEquipmentRow(this, '${rowId}')" 
+                                                    class="text-slate-400 hover:text-red-600 transition-colors p-2 rounded-full hover:bg-red-50 opacity-100">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </div>
+                                        `;
 
                 // Clone options from first select
                 const firstSelect = document.getElementById('equipment-select-0');
