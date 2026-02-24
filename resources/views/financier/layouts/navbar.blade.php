@@ -33,21 +33,31 @@
                 class="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-xl py-4 invisible opacity-0 translate-y-2 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 z-50 transform origin-top-right border border-gray-100">
                 <div class="px-4 mb-3 flex items-center justify-between border-b border-gray-50 pb-2">
                     <h3 class="text-sm font-bold text-gray-900">Notifications</h3>
-                    <span
-                        class="text-[10px] font-medium text-red-500 bg-red-50 px-2 py-0.5 rounded-full">{{ $unreadCount }}
-                        nouvelles</span>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[10px] font-medium text-red-500 bg-red-50 px-2 py-0.5 rounded-full">
+                            {{ $unreadCount }} nouvelles
+                        </span>
+                        @if($unreadCount > 0)
+                            <form action="{{ route('financier.notifications.markAllAsRead') }}" method="POST" class="inline">
+                                @csrf
+                                <button type="submit" class="text-[10px] font-bold text-gray-400 hover:text-red-600 transition-colors" title="Tout marquer comme lu">
+                                    <i class="fas fa-check-double"></i>
+                                </button>
+                            </form>
+                        @endif
+                    </div>
                 </div>
 
                 <div class="max-h-64 overflow-y-auto">
                     @forelse(Auth::guard('user')->user()->notifications->take(5) as $notification)
-                        <div
-                            class="px-4 py-3 hover:bg-gray-50 transition-colors cursor-pointer border-b border-gray-50 last:border-0 {{ $notification->unread() ? 'bg-red-50/30' : '' }}">
+                        <a href="{{ route('financier.notifications.read', $notification->id) }}"
+                            class="block px-4 py-3 hover:bg-gray-50 transition-colors cursor-pointer border-b border-gray-50 last:border-0 {{ $notification->unread() ? 'bg-red-50/30' : '' }}">
                             <div class="flex gap-3">
                                 <div
                                     class="w-8 h-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center flex-shrink-0">
                                     <i class="fas fa-exclamation-circle text-xs"></i>
                                 </div>
-                                <div>
+                                <div class="flex-1">
                                     <p class="text-xs font-semibold text-gray-900 leading-tight">
                                         {{ $notification->data['reference'] ?? 'Rappel Paiement' }}
                                     </p>
@@ -59,7 +69,7 @@
                                     </span>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                     @empty
                         <div class="px-4 py-8 text-center">
                             <i class="fas fa-bell-slash text-2xl text-gray-200 mb-2"></i>
@@ -69,7 +79,7 @@
                 </div>
 
                 <div class="px-4 mt-3 pt-2 border-t border-gray-50">
-                    <a href="#"
+                    <a href="{{ route('financier.notifications.index') }}"
                         class="block text-center text-xs font-bold text-red-600 hover:text-red-700 transition-colors">
                         Voir tout l'historique
                     </a>

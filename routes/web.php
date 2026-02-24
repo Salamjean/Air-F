@@ -229,6 +229,13 @@ Route::middleware(['auth:user', 'financier'])->prefix('financier')->group(functi
         Route::post('/', [App\Http\Controllers\Financier\FinancierUserController::class, 'store'])->name('store');
         Route::delete('/{user}', [App\Http\Controllers\Financier\FinancierUserController::class, 'destroy'])->name('destroy');
     });
+
+    // Gestion des notifications
+    Route::prefix('notifications')->name('financier.notifications.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Financier\FinancierNotificationController::class, 'index'])->name('index');
+        Route::get('/{id}/read', [App\Http\Controllers\Financier\FinancierNotificationController::class, 'read'])->name('read');
+        Route::post('/mark-all-as-read', [App\Http\Controllers\Financier\FinancierNotificationController::class, 'markAllAsRead'])->name('markAllAsRead');
+    });
 });
 
 //Les routes de gestion du personnel (espace personnel)

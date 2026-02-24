@@ -20,6 +20,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'personnel' => \App\Http\Middleware\PersonnelMiddleware::class,
         ]);
     })
+    ->withSchedule(function ($schedule) {
+        $schedule->command('check:payment-deadlines')->dailyAt('08:00');
+    })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
     })->create();
