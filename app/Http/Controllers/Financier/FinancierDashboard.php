@@ -16,13 +16,13 @@ class FinancierDashboard extends Controller
 
         // Listes récentes
         $recentToPay = \App\Models\Intervention::where('statut', 'finance')
-            ->with(['site'])
+            ->with(['site', 'personnels', 'prestataire'])
             ->latest()
             ->take(5)
             ->get();
 
         $recentPaid = \App\Models\Intervention::where('statut', 'payer')
-            ->with(['site'])
+            ->with(['site', 'personnels', 'prestataire'])
             ->latest('updated_at')
             ->take(5)
             ->get();

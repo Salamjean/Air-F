@@ -19,13 +19,50 @@
         <a href="{{ route('financier.interventions.index') }}"
             class="flex items-center justify-between px-6 py-3 {{ request()->routeIs('financier.interventions.index') ? 'bg-gray-800 text-gray-100 border-l-4 border-red-500' : 'text-gray-400 hover:bg-gray-800 hover:text-gray-100 hover:border-l-4 hover:border-red-500 border-l-4 border-transparent' }} transition-colors group">
             <div class="flex items-center">
-                <i class="fas fa-money-bill-wave w-6"></i>
-                <span class="mx-3 font-medium">Fait un paiement</span>
+                <i class="fas fa-file-invoice-dollar w-6"></i>
+                <span class="mx-3 font-medium">Réception</span>
             </div>
-            @if($countFinanceAssign > 0)
+            @php
+                $countReception = \App\Models\Intervention::where('statut', 'finance')->count();
+            @endphp
+            @if($countReception > 0)
                 <span
                     class="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-sm group-hover:bg-red-600 transition-colors">
-                    {{ $countFinanceAssign }}
+                    {{ $countReception }}
+                </span>
+            @endif
+        </a>
+
+        <a href="{{ route('financier.interventions.attente_delai') }}"
+            class="flex items-center justify-between px-6 py-3 {{ request()->routeIs('financier.interventions.attente_delai') ? 'bg-gray-800 text-gray-100 border-l-4 border-red-500' : 'text-gray-400 hover:bg-gray-800 hover:text-gray-100 hover:border-l-4 hover:border-red-500 border-l-4 border-transparent' }} transition-colors group">
+            <div class="flex items-center">
+                <i class="fas fa-hourglass-start w-6"></i>
+                <span class="mx-3 font-medium">Fixer le délai</span>
+            </div>
+            @php
+                $countDelai = \App\Models\Intervention::where('statut', 'receptionne')->count();
+            @endphp
+            @if($countDelai > 0)
+                <span
+                    class="bg-orange-500 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-sm group-hover:bg-orange-600 transition-colors">
+                    {{ $countDelai }}
+                </span>
+            @endif
+        </a>
+
+        <a href="{{ route('financier.interventions.attente_reglement') }}"
+            class="flex items-center justify-between px-6 py-3 {{ request()->routeIs('financier.interventions.attente_reglement') ? 'bg-gray-800 text-gray-100 border-l-4 border-red-500' : 'text-gray-400 hover:bg-gray-800 hover:text-gray-100 hover:border-l-4 hover:border-red-500 border-l-4 border-transparent' }} transition-colors group">
+            <div class="flex items-center">
+                <i class="fas fa-money-check-alt w-6"></i>
+                <span class="mx-3 font-medium">Attente Règlement</span>
+            </div>
+            @php
+                $countReglement = \App\Models\Intervention::where('statut', 'attente_paiement')->count();
+            @endphp
+            @if($countReglement > 0)
+                <span
+                    class="bg-blue-500 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-sm group-hover:bg-blue-600 transition-colors">
+                    {{ $countReglement }}
                 </span>
             @endif
         </a>
@@ -33,15 +70,9 @@
         <a href="{{ route('financier.interventions.historique') }}"
             class="flex items-center justify-between px-6 py-3 {{ request()->routeIs('financier.interventions.historique') ? 'bg-gray-800 text-gray-100 border-l-4 border-red-500' : 'text-gray-400 hover:bg-gray-800 hover:text-gray-100 hover:border-l-4 hover:border-red-500 border-l-4 border-transparent' }} transition-colors group">
             <div class="flex items-center">
-                <i class="fas fa-history w-6"></i>
+                <i class="fas fa-check-double w-6"></i>
                 <span class="mx-3 font-medium">Historique</span>
             </div>
-            @if($countPayerAssign > 0)
-                <span
-                    class="bg-green-500 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-sm group-hover:bg-green-600 transition-colors">
-                    {{ $countPayerAssign }}
-                </span>
-            @endif
         </a>
 
         <!-- Utilisateurs Dropdown -->

@@ -37,19 +37,19 @@ class AppServiceProvider extends ServiceProvider
             $countEnvoie = \App\Models\Intervention::where('statut', 'envoyer')->count();
             $countConfirmer = \App\Models\Intervention::where('statut', 'confirmer')->count();
             $countTraiter = \App\Models\Intervention::where('statut', 'traiter')->count();
-            $countAccord = \App\Models\Intervention::whereIn('statut', ['accord'])->count();
-            $countFinance = \App\Models\Intervention::where('statut', 'finance')->count();
+            $countAccord = \App\Models\Intervention::where('statut', 'accord')->count();
+            $countFinance = \App\Models\Intervention::whereIn('statut', ['finance', 'receptionne', 'attente_paiement'])->count();
             $countDevis = \App\Models\Intervention::where('statut', 'devis')->count();
             $countPayerTotal = \App\Models\Intervention::where('statut', 'payer')->count();
 
             // Counts for Financier
-            $countFinanceAssign = \App\Models\Intervention::where('statut', 'finance')->where('financier_id', $userId)->count();
+            $countFinanceAssign = \App\Models\Intervention::whereIn('statut', ['finance', 'receptionne', 'attente_paiement'])->where('financier_id', $userId)->count();
             $countPayerAssign = \App\Models\Intervention::where('statut', 'payer')->where('financier_id', $userId)->count();
 
             // Counts for Prestataire
             $countPayerPrestataire = \App\Models\Intervention::where('statut', 'payer')->where('prestataire_id', $userId)->count();
             $countFacturePrestataire = \App\Models\Intervention::where('statut', 'facture')->where('prestataire_id', $userId)->count();
-            $countFinancePrestataire = \App\Models\Intervention::where('statut', 'finance')->where('prestataire_id', $userId)->count();
+            $countFinancePrestataire = \App\Models\Intervention::whereIn('statut', ['finance', 'receptionne', 'attente_paiement'])->where('prestataire_id', $userId)->count();
             $countAccordPrestataire = \App\Models\Intervention::where('statut', 'accord')->where('prestataire_id', $userId)->count();
             $countEnAttentePrestataire = \App\Models\Intervention::where('statut', 'en_attente')->where('prestataire_id', $userId)->count();
             $countValiderPrestataire = \App\Models\Intervention::where('statut', 'confirmer')->where('prestataire_id', $userId)->count();
@@ -67,7 +67,7 @@ class AppServiceProvider extends ServiceProvider
             $countConfirmerResponsable = \App\Models\Intervention::where('statut', 'facture')
                 ->count();
 
-            $countAccordResponsable = \App\Models\Intervention::where('statut', 'accord')
+            $countAccordResponsable = \App\Models\Intervention::whereIn('statut', ['accord', 'finance', 'receptionne', 'attente_paiement'])
                 ->count();
 
             $countPayerResponsable = \App\Models\Intervention::where('statut', 'payer')
@@ -86,7 +86,7 @@ class AppServiceProvider extends ServiceProvider
 
             $countHistoriquePersonnel = \App\Models\Intervention::whereHas('personnels', function ($q) use ($userId) {
                 $q->where('users.id', $userId);
-            })->whereIn('statut', ['traiter', 'devis', 'accord', 'finance', 'payer'])->count();
+            })->whereIn('statut', ['traiter', 'devis', 'accord', 'finance', 'receptionne', 'attente_paiement', 'payer'])->count();
 
             $view->with(compact(
                 'countValider',

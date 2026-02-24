@@ -37,6 +37,8 @@
                             </th>
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Statut
                             </th>
+                            <th class="px-6 py-4 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">Actions
+                            </th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
@@ -73,8 +75,10 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
                                     <span
                                         class="px-3 py-1 inline-flex text-xs leading-5 font-bold rounded-full bg-green-100 text-green-800">
-                                        Facturée
+                                        À Facturer
                                     </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <a href="{{ route('prestataire.interventions.details', $intervention->id) }}"
                                         class="text-gray-500 hover:text-gray-700 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors inline-block ml-2">
                                         <i class="fas fa-eye mr-1"></i> Détails
@@ -111,7 +115,7 @@
                                 <p class="mb-4 text-sm text-gray-600">Référence: <strong>${reference}</strong></p>
                                 <div class="mb-4">
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Montant définitif (EURO)</label>
-                                    <input type="number" id="montant_final" class="swal2-input w-full m-0" value="${montantInitial}" placeholder="Entrez le montant final">
+                                    <input type="number" id="montant_final" class="swal2-input w-full m-0" value="${montantInitial}" placeholder="Entrez le montant final" readonly>
                                 </div>
                                 <div class="mb-4">
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Joindre la facture (PDF, Image)</label>

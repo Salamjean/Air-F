@@ -113,7 +113,7 @@
                                     <td class="px-6 py-4">
                                         <span
                                             class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100">
-                                            <i class="fas fa-paper-plane text-blue-500"></i> Envoyée
+                                            <i class="fas fa-paper-plane text-blue-500"></i> Reçue
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 text-right">
@@ -127,7 +127,7 @@
                                             <a href="{{ route('responsable.interventions.details', $intervention->id) }}"
                                                 class="inline-flex items-center justify-center w-8 h-8 bg-gray-50 text-gray-600 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors"
                                                 title="Détails">
-                                                <i class="fas fa-arrow-right"></i>
+                                                <i class="fas fa-eye"></i>
                                             </a>
                                         </div>
                                     </td>

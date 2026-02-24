@@ -117,7 +117,7 @@
                                     <a href="{{ route('responsable.interventions.details', $intervention->id) }}"
                                         class="inline-flex items-center justify-center w-8 h-8 bg-gray-50 text-gray-600 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors"
                                         title="Détails">
-                                        <i class="fas fa-arrow-right"></i>
+                                        <i class="fas fa-eye"></i>
                                     </a>
                                 </td>
                             </tr>

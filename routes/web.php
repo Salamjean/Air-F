@@ -207,6 +207,16 @@ Route::middleware(['auth:user', 'financier'])->prefix('financier')->group(functi
 
     Route::prefix('interventions')->name('financier.interventions.')->group(function () {
         Route::get('/paiements', [App\Http\Controllers\Financier\FinancierInterventionController::class, 'index'])->name('index');
+
+        // Nouvelles routes pour le flux multi-étapes
+        Route::get('/all-reception', [App\Http\Controllers\Financier\FinancierInterventionController::class, 'allReception'])->name('all_reception');
+        Route::post('/{intervention}/receptionner', [App\Http\Controllers\Financier\FinancierInterventionController::class, 'receptionner'])->name('receptionner');
+
+        Route::get('/attente-delai', [App\Http\Controllers\Financier\FinancierInterventionController::class, 'attenteDelai'])->name('attente_delai');
+        Route::post('/{intervention}/fixer-delai', [App\Http\Controllers\Financier\FinancierInterventionController::class, 'fixerDelai'])->name('fixer_delai');
+
+        Route::get('/attente-reglement', [App\Http\Controllers\Financier\FinancierInterventionController::class, 'attenteReglement'])->name('attente_reglement');
+
         Route::get('/historique', [App\Http\Controllers\Financier\FinancierInterventionController::class, 'historique'])->name('historique');
         Route::get('/{intervention}/paiement-detail', [App\Http\Controllers\Financier\FinancierInterventionController::class, 'paiementDetail'])->name('paiement_detail');
         Route::post('/{intervention}/payer', [App\Http\Controllers\Financier\FinancierInterventionController::class, 'payer'])->name('payer');

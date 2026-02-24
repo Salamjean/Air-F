@@ -5,21 +5,9 @@
         <!-- Header Section -->
         <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-10 gap-6">
             <div>
-                <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight">Interventions à Réceptionner</h1>
-                <p class="text-lg text-gray-600 mt-2">Dossiers envoyés par l'administration, en attente de prise en charge
-                    financière.</p>
-            </div>
-
-            <!-- Search Bar -->
-            <div class="w-full md:w-auto relative">
-                <form action="{{ route('financier.interventions.index') }}" method="GET" class="relative group">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <i class="fas fa-search text-gray-400 group-focus-within:text-red-500 transition-colors"></i>
-                    </div>
-                    <input type="text" name="search" value="{{ request('search') }}"
-                        class="pl-10 pr-4 py-3 w-full md:w-80 bg-white border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-300 placeholder-gray-400 text-gray-700"
-                        placeholder="Rechercher par référence, code...">
-                </form>
+                <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight">Attente de Règlement</h1>
+                <p class="text-lg text-gray-600 mt-2">Dossiers dont le délai est fixé, en attente de validation finale du
+                    paiement.</p>
             </div>
         </div>
 
@@ -32,9 +20,9 @@
                             class="bg-gray-50 border-b border-gray-100 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                             <th class="px-6 py-4">Référence</th>
                             <th class="px-6 py-4">Libellé</th>
-                            <th class="px-6 py-4">Équipes</th>
+                            <th class="px-6 py-4">Prestataire / Personnel</th>
                             <th class="px-6 py-4">Montant</th>
-                            <th class="px-6 py-4">Statut</th>
+                            <th class="px-6 py-4">Échéance</th>
                             <th class="px-6 py-4 text-right">Actions</th>
                         </tr>
                     </thead>
@@ -67,8 +55,8 @@
                                                 <i class="fas fa-building"></i>
                                             </div>
                                             <span class="text-xs font-bold text-gray-700 truncate max-w-[120px]"
-                                                title="{{ $intervention->prestataire->name }}">
-                                                {{ $intervention->prestataire->name }}
+                                                title="{{ $intervention->prestataire->name ?? 'N/A' }}">
+                                                {{ $intervention->prestataire->name ?? 'N/A' }}
                                             </span>
                                         </div>
                                         @if($intervention->personnels->count() > 0)
@@ -89,21 +77,33 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4">
+                                    @php
+                                        $diff = now()->diffInDays($intervention->date_paiement_prevue, false);
+                                        $colorClass = $diff <= 5 ? 'text-red-600 bg-red-50' : 'text-blue-600 bg-blue-50';
+                                    @endphp
                                     <span
-                                        class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-yellow-50 text-yellow-700 border border-yellow-100 uppercase tracking-wider">
-                                        <i class="fas fa-clock"></i> À réceptionner
+                                        class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold {{ $colorClass }} border border-current opacity-80">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        {{ \Carbon\Carbon::parse($intervention->date_paiement_prevue)->format('d/m/Y') }}
+                                        @if($diff <= 5 && $diff >= 0)
+                                            <span class="animate-pulse ml-1">(J-{{ (int) $diff }})</span>
+                                        @elseif($diff < 0)
+                                            <span class="ml-1 text-[8px] uppercase font-extrabold">(Retard)</span>
+                                        @endif
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-right">
                                     <div class="flex items-center justify-end gap-2">
-                                        <form action="{{ route('financier.interventions.receptionner', $intervention->id) }}"
+                                        <form action="{{ route('financier.interventions.payer', $intervention->id) }}"
                                             method="POST" class="inline-block">
                                             @csrf
-                                            <button type="button" data-reference="{{ $intervention->reference }}"
+                                            <button type="button" data-id="{{ $intervention->id }}"
+                                                data-reference="{{ $intervention->reference }}"
                                                 data-montant="{{ number_format($intervention->montant, 0, ',', ' ') }}"
-                                                onclick="confirmReception(this)"
-                                                class="inline-flex items-center justify-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl transition-all text-xs font-bold shadow-sm hover:shadow-md">
-                                                <i class="fas fa-hand-holding-usd mr-2"></i> Réceptionner
+                                                data-date="{{ \Carbon\Carbon::parse($intervention->date_paiement_prevue)->format('d/m/Y') }}"
+                                                onclick="confirmPaymentInline(this)"
+                                                class="inline-flex items-center justify-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl transition-all text-xs font-bold shadow-sm hover:shadow-md">
+                                                <i class="fas fa-check-double mr-2"></i> Payer
                                             </button>
                                         </form>
                                         <a href="{{ route('financier.interventions.paiement_detail', $intervention->id) }}"
@@ -115,15 +115,15 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="px-6 py-12 text-center">
+                                <td colspan="6" class="px-6 py-12 text-center text-gray-500">
                                     <div class="flex flex-col items-center justify-center">
                                         <div
                                             class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4 text-gray-300">
                                             <i class="fas fa-money-check text-2xl"></i>
                                         </div>
-                                        <h3 class="text-lg font-medium text-gray-900">Aucune intervention</h3>
-                                        <p class="text-gray-500 mt-1 max-w-sm text-sm">Les interventions envoyées par
-                                            l'administration apparaîtront ici.</p>
+                                        <h3 class="text-lg font-medium text-gray-900">Aucun règlement</h3>
+                                        <p class="text-gray-500 mt-1 max-w-sm text-sm">Les interventions en attente de règlement
+                                            final apparaîtront ici.</p>
                                     </div>
                                 </td>
                             </tr>
@@ -137,29 +137,37 @@
 
 @push('scripts')
     <script>
-        function confirmReception(button) {
+        function confirmPaymentInline(button) {
             const ref = button.getAttribute('data-reference');
             const montant = button.getAttribute('data-montant');
+            const date = button.getAttribute('data-date');
 
             Swal.fire({
-                title: 'Réceptionner l\'intervention ?',
+                title: 'Valider le paiement ?',
                 html: `
                             <div class="text-left bg-gray-50 p-5 rounded-2xl border border-gray-100 space-y-3 mt-4">
                                 <div class="flex justify-between border-b border-gray-200 pb-2">
                                     <span class="text-gray-500 text-[10px] font-bold uppercase tracking-wider">Référence</span>
                                     <span class="text-gray-900 font-bold">${ref}</span>
                                 </div>
-                                <div class="flex justify-between">
-                                    <span class="text-gray-500 text-[10px] font-bold uppercase tracking-wider">Montant total</span>
+                                <div class="flex justify-between border-b border-gray-200 pb-2">
+                                    <span class="text-gray-500 text-[10px] font-bold uppercase tracking-wider">Montant</span>
                                     <span class="text-red-600 font-extrabold">${montant} EURO</span>
                                 </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-500 text-[10px] font-bold uppercase tracking-wider">Échéance prévue</span>
+                                    <span class="text-gray-900 font-bold">${date}</span>
+                                </div>
                             </div>
+                            <p class="text-xs text-gray-500 mt-4 leading-relaxed px-4 text-center">
+                                Voulez-vous valider ce règlement ? Cette action est irréversible et l'intervention sera classée dans l'historique.
+                            </p>
                         `,
-                icon: 'question',
+                icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#DC2626',
+                confirmButtonColor: '#059669', // green-600
                 cancelButtonColor: '#6B7280',
-                confirmButtonText: '<i class="fas fa-check-circle mr-2"></i> Oui, réceptionner',
+                confirmButtonText: '<i class="fas fa-check-circle mr-2"></i> Valider le paiement',
                 cancelButtonText: 'Annuler',
                 reverseButtons: true,
                 customClass: {

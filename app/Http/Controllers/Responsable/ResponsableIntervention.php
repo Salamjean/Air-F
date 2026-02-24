@@ -80,7 +80,7 @@ class ResponsableIntervention extends Controller
 
     public function accordees(Request $request)
     {
-        $query = Intervention::whereIn('statut', ['accord'])
+        $query = Intervention::whereIn('statut', ['accord', 'finance', 'receptionne', 'attente_paiement'])
             ->with(['personnels', 'prestataire', 'responsable']);
 
         if ($request->has('search') && !empty($request->search)) {

@@ -5,21 +5,8 @@
         <!-- Header Section -->
         <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-10 gap-6">
             <div>
-                <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight">Interventions à Réceptionner</h1>
-                <p class="text-lg text-gray-600 mt-2">Dossiers envoyés par l'administration, en attente de prise en charge
-                    financière.</p>
-            </div>
-
-            <!-- Search Bar -->
-            <div class="w-full md:w-auto relative">
-                <form action="{{ route('financier.interventions.index') }}" method="GET" class="relative group">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <i class="fas fa-search text-gray-400 group-focus-within:text-red-500 transition-colors"></i>
-                    </div>
-                    <input type="text" name="search" value="{{ request('search') }}"
-                        class="pl-10 pr-4 py-3 w-full md:w-80 bg-white border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-300 placeholder-gray-400 text-gray-700"
-                        placeholder="Rechercher par référence, code...">
-                </form>
+                <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight">Fixer le Délai de Paiement</h1>
+                <p class="text-lg text-gray-600 mt-2">Dossiers réceptionnés en attente de planification du règlement.</p>
             </div>
         </div>
 
@@ -32,9 +19,9 @@
                             class="bg-gray-50 border-b border-gray-100 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                             <th class="px-6 py-4">Référence</th>
                             <th class="px-6 py-4">Libellé</th>
-                            <th class="px-6 py-4">Équipes</th>
+                            <th class="px-6 py-4">Prestataire / Personnel</th>
                             <th class="px-6 py-4">Montant</th>
-                            <th class="px-6 py-4">Statut</th>
+                            <th class="px-6 py-4">Choisir le Délai</th>
                             <th class="px-6 py-4 text-right">Actions</th>
                         </tr>
                     </thead>
@@ -67,8 +54,8 @@
                                                 <i class="fas fa-building"></i>
                                             </div>
                                             <span class="text-xs font-bold text-gray-700 truncate max-w-[120px]"
-                                                title="{{ $intervention->prestataire->name }}">
-                                                {{ $intervention->prestataire->name }}
+                                                title="{{ $intervention->prestataire->name ?? 'N/A' }}">
+                                                {{ $intervention->prestataire->name ?? 'N/A' }}
                                             </span>
                                         </div>
                                         @if($intervention->personnels->count() > 0)
@@ -89,28 +76,32 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <span
-                                        class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-yellow-50 text-yellow-700 border border-yellow-100 uppercase tracking-wider">
-                                        <i class="fas fa-clock"></i> À réceptionner
-                                    </span>
+                                    <form action="{{ route('financier.interventions.fixer_delai', $intervention->id) }}"
+                                        method="POST" class="flex items-center gap-2">
+                                        @csrf
+                                        <select name="delai_paiement" required
+                                            class="text-xs bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 outline-none p-2.5 font-bold text-gray-700">
+                                            <option value="" disabled selected>Sélectionner...</option>
+                                            <option value="30">30 Jours</option>
+                                            <option value="45">45 Jours</option>
+                                            <option value="60">60 Jours</option>
+                                            <option value="95">95 Jours</option>
+                                            <option value="120">120 Jours</option>
+                                        </select>
+                                        <button type="button" data-reference="{{ $intervention->reference }}"
+                                            data-montant="{{ number_format($intervention->montant, 0, ',', ' ') }}"
+                                            onclick="confirmDelay(this)"
+                                            class="bg-indigo-600 text-white w-9 h-9 rounded-xl hover:bg-indigo-700 transition-all flex items-center justify-center shadow-sm hover:shadow-md"
+                                            title="Valider le délai">
+                                            <i class="fas fa-calendar-check"></i>
+                                        </button>
+                                    </form>
                                 </td>
                                 <td class="px-6 py-4 text-right">
-                                    <div class="flex items-center justify-end gap-2">
-                                        <form action="{{ route('financier.interventions.receptionner', $intervention->id) }}"
-                                            method="POST" class="inline-block">
-                                            @csrf
-                                            <button type="button" data-reference="{{ $intervention->reference }}"
-                                                data-montant="{{ number_format($intervention->montant, 0, ',', ' ') }}"
-                                                onclick="confirmReception(this)"
-                                                class="inline-flex items-center justify-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl transition-all text-xs font-bold shadow-sm hover:shadow-md">
-                                                <i class="fas fa-hand-holding-usd mr-2"></i> Réceptionner
-                                            </button>
-                                        </form>
-                                        <a href="{{ route('financier.interventions.paiement_detail', $intervention->id) }}"
-                                            class="inline-flex items-center justify-center px-4 py-2 border border-gray-200 hover:bg-gray-50 text-gray-600 rounded-xl transition-all text-xs font-bold shadow-sm">
-                                            Détails
-                                        </a>
-                                    </div>
+                                    <a href="{{ route('financier.interventions.paiement_detail', $intervention->id) }}"
+                                        class="inline-flex items-center justify-center px-4 py-2 border border-gray-200 hover:bg-gray-50 text-gray-600 rounded-xl transition-all text-xs font-bold shadow-sm">
+                                        Détails
+                                    </a>
                                 </td>
                             </tr>
                         @empty
@@ -119,11 +110,11 @@
                                     <div class="flex flex-col items-center justify-center">
                                         <div
                                             class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4 text-gray-300">
-                                            <i class="fas fa-money-check text-2xl"></i>
+                                            <i class="fas fa-hourglass-half text-2xl"></i>
                                         </div>
-                                        <h3 class="text-lg font-medium text-gray-900">Aucune intervention</h3>
-                                        <p class="text-gray-500 mt-1 max-w-sm text-sm">Les interventions envoyées par
-                                            l'administration apparaîtront ici.</p>
+                                        <h3 class="text-lg font-medium text-gray-900">Aucun dossier</h3>
+                                        <p class="text-gray-500 mt-1 max-w-sm text-sm">Les interventions réceptionnées
+                                            apparaîtront ici pour fixer le délai.</p>
                                     </div>
                                 </td>
                             </tr>
@@ -137,29 +128,47 @@
 
 @push('scripts')
     <script>
-        function confirmReception(button) {
+        function confirmDelay(button) {
+            const form = button.closest('form');
+            const select = form.querySelector('select');
+
+            if (!select.value) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Délai manquant',
+                    text: 'Veuillez sélectionner un délai avant de valider.',
+                    confirmButtonColor: '#6B7280'
+                });
+                return;
+            }
+
             const ref = button.getAttribute('data-reference');
             const montant = button.getAttribute('data-montant');
+            const delai = select.value;
 
             Swal.fire({
-                title: 'Réceptionner l\'intervention ?',
+                title: 'Valider le délai ?',
                 html: `
                             <div class="text-left bg-gray-50 p-5 rounded-2xl border border-gray-100 space-y-3 mt-4">
                                 <div class="flex justify-between border-b border-gray-200 pb-2">
                                     <span class="text-gray-500 text-[10px] font-bold uppercase tracking-wider">Référence</span>
                                     <span class="text-gray-900 font-bold">${ref}</span>
                                 </div>
+                                <div class="flex justify-between border-b border-gray-200 pb-2">
+                                    <span class="text-gray-500 text-[10px] font-bold uppercase tracking-wider">Montant</span>
+                                    <span class="text-gray-900 font-bold">${montant} EURO</span>
+                                </div>
                                 <div class="flex justify-between">
-                                    <span class="text-gray-500 text-[10px] font-bold uppercase tracking-wider">Montant total</span>
-                                    <span class="text-red-600 font-extrabold">${montant} EURO</span>
+                                    <span class="text-gray-500 text-[10px] font-bold uppercase tracking-wider">Délai choisi</span>
+                                    <span class="text-indigo-600 font-extrabold">${delai} Jours</span>
                                 </div>
                             </div>
                         `,
-                icon: 'question',
+                icon: 'info',
                 showCancelButton: true,
-                confirmButtonColor: '#DC2626',
+                confirmButtonColor: '#4F46E5', // indigo-600
                 cancelButtonColor: '#6B7280',
-                confirmButtonText: '<i class="fas fa-check-circle mr-2"></i> Oui, réceptionner',
+                confirmButtonText: '<i class="fas fa-check-circle mr-2"></i> Confirmer le délai',
                 cancelButtonText: 'Annuler',
                 reverseButtons: true,
                 customClass: {
@@ -169,7 +178,7 @@
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
-                    button.closest('form').submit();
+                    form.submit();
                 }
             });
         }

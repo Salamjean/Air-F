@@ -176,7 +176,7 @@ class PrestataireIntervention extends Controller
     public function finance(Request $request)
     {
         $query = Intervention::where('prestataire_id', auth('user')->id())
-            ->where('statut', 'finance')->with(['personnels', 'prestataire', 'site']);
+            ->whereIn('statut', ['finance', 'receptionne', 'attente_paiement'])->with(['personnels', 'prestataire', 'site']);
 
         if ($request->has('search')) {
             $search = $request->input('search');

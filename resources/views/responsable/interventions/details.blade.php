@@ -99,7 +99,7 @@
                         @endif
 
                         <!-- BILLING EVOLUTION STEPPER -->
-                        @if(in_array($intervention->statut, ['facture', 'accord', 'finance', 'payer']))
+                        @if(in_array($intervention->statut, ['facture', 'accord', 'finance', 'receptionne', 'attente_paiement', 'payer']))
                             <div class="mb-10 bg-gray-50/50 p-6 rounded-3xl border border-gray-100">
                                 <h4 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-6 text-center">
                                     Évolution du processus de règlement</h4>
@@ -107,63 +107,67 @@
                                     <!-- Step 1: Facturée -->
                                     <div class="flex flex-col items-center flex-1">
                                         <div
-                                            class="w-10 h-10 rounded-full {{ in_array($intervention->statut, ['facture', 'accord', 'finance', 'payer']) ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-400' }} flex items-center justify-center shadow-lg transition-all">
-                                            <i class="fas fa-file-invoice"></i>
+                                            class="w-8 h-8 rounded-full {{ in_array($intervention->statut, ['facture', 'accord', 'finance', 'receptionne', 'attente_paiement', 'payer']) ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-400' }} flex items-center justify-center shadow-lg transition-all">
+                                            <i class="fas fa-file-invoice text-xs"></i>
                                         </div>
                                         <span
-                                            class="text-[10px] mt-2 font-bold {{ in_array($intervention->statut, ['facture', 'accord', 'finance', 'payer']) ? 'text-green-600' : 'text-gray-400' }} uppercase">Facturation</span>
-                                        <span class="text-[8px] text-gray-400 font-medium whitespace-nowrap">Rapport
-                                            validé</span>
+                                            class="text-[8px] mt-2 font-bold {{ in_array($intervention->statut, ['facture', 'accord', 'finance', 'receptionne', 'attente_paiement', 'payer']) ? 'text-green-600' : 'text-gray-400' }} uppercase">Facturation</span>
                                     </div>
 
                                     <div
-                                        class="hidden md:block w-full h-1 {{ in_array($intervention->statut, ['accord', 'finance', 'payer']) ? 'bg-green-500' : 'bg-gray-200' }} -mt-6">
+                                        class="hidden md:block w-full h-0.5 {{ in_array($intervention->statut, ['accord', 'finance', 'receptionne', 'attente_paiement', 'payer']) ? 'bg-green-500' : 'bg-gray-200' }} -mt-5">
                                     </div>
 
                                     <!-- Step 2: Accordée -->
                                     <div class="flex flex-col items-center flex-1">
                                         <div
-                                            class="w-10 h-10 rounded-full {{ in_array($intervention->statut, ['accord', 'finance', 'payer']) ? 'bg-indigo-500 text-white' : 'bg-gray-200 text-gray-400' }} {{ $intervention->statut == 'accord' ? 'ring-4 ring-indigo-100 animate-pulse' : '' }} flex items-center justify-center shadow-lg transition-all">
-                                            <i class="fas fa-file-signature"></i>
+                                            class="w-8 h-8 rounded-full {{ in_array($intervention->statut, ['accord', 'finance', 'receptionne', 'attente_paiement', 'payer']) ? 'bg-indigo-500 text-white' : 'bg-gray-200 text-gray-400' }} flex items-center justify-center shadow-lg transition-all">
+                                            <i class="fas fa-file-signature text-xs"></i>
                                         </div>
                                         <span
-                                            class="text-[10px] mt-2 font-bold {{ in_array($intervention->statut, ['accord', 'finance', 'payer']) ? 'text-indigo-600' : 'text-gray-400' }} uppercase text-center">Accord
-                                            Admin</span>
-                                        <span class="text-[8px] text-gray-400 font-medium whitespace-nowrap">Facture
-                                            soumise</span>
+                                            class="text-[8px] mt-2 font-bold {{ in_array($intervention->statut, ['accord', 'finance', 'receptionne', 'attente_paiement', 'payer']) ? 'text-indigo-600' : 'text-gray-400' }} uppercase text-center">Accord</span>
                                     </div>
 
                                     <div
-                                        class="hidden md:block w-full h-1 {{ in_array($intervention->statut, ['finance', 'payer']) ? 'bg-indigo-500' : 'bg-gray-200' }} -mt-6">
+                                        class="hidden md:block w-full h-0.5 {{ in_array($intervention->statut, ['finance', 'receptionne', 'attente_paiement', 'payer']) ? 'bg-indigo-500' : 'bg-gray-200' }} -mt-5">
                                     </div>
 
-                                    <!-- Step 3: Finance -->
+                                    <!-- Step 3: Réception -->
                                     <div class="flex flex-col items-center flex-1">
                                         <div
-                                            class="w-10 h-10 rounded-full {{ in_array($intervention->statut, ['finance', 'payer']) ? 'bg-teal-500 text-white' : 'bg-gray-200 text-gray-400' }} {{ $intervention->statut == 'finance' ? 'ring-4 ring-teal-100 animate-pulse' : '' }} flex items-center justify-center shadow-lg transition-all">
-                                            <i class="fas fa-university"></i>
+                                            class="w-8 h-8 rounded-full {{ in_array($intervention->statut, ['finance', 'receptionne', 'attente_paiement', 'payer']) ? 'bg-teal-500 text-white' : 'bg-gray-200 text-gray-400' }} flex items-center justify-center shadow-lg transition-all">
+                                            <i class="fas fa-university text-xs"></i>
                                         </div>
                                         <span
-                                            class="text-[10px] mt-2 font-bold {{ in_array($intervention->statut, ['finance', 'payer']) ? 'text-teal-600' : 'text-gray-400' }} uppercase text-center">En
-                                            Finance</span>
-                                        <span class="text-[8px] text-gray-400 font-medium whitespace-nowrap">En attente
-                                            paiement</span>
+                                            class="text-[8px] mt-2 font-bold {{ in_array($intervention->statut, ['finance', 'receptionne', 'attente_paiement', 'payer']) ? 'text-teal-600' : 'text-gray-400' }} uppercase text-center">Réception</span>
                                     </div>
 
                                     <div
-                                        class="hidden md:block w-full h-1 {{ in_array($intervention->statut, ['payer']) ? 'bg-teal-500' : 'bg-gray-200' }} -mt-6">
+                                        class="hidden md:block w-full h-0.5 {{ in_array($intervention->statut, ['receptionne', 'attente_paiement', 'payer']) ? 'bg-teal-500' : 'bg-gray-200' }} -mt-5">
                                     </div>
 
-                                    <!-- Step 4: Payée -->
+                                    <!-- Step 4: Délai -->
                                     <div class="flex flex-col items-center flex-1">
                                         <div
-                                            class="w-10 h-10 rounded-full {{ in_array($intervention->statut, ['payer']) ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-400' }} {{ $intervention->statut == 'payer' ? 'ring-4 ring-green-100' : '' }} flex items-center justify-center shadow-lg transition-all">
-                                            <i class="fas fa-check-double"></i>
+                                            class="w-8 h-8 rounded-full {{ in_array($intervention->statut, ['receptionne', 'attente_paiement', 'payer']) ? 'bg-teal-500 text-white' : 'bg-gray-200 text-gray-400' }} flex items-center justify-center shadow-lg transition-all">
+                                            <i class="fas fa-calendar-alt text-xs"></i>
                                         </div>
                                         <span
-                                            class="text-[10px] mt-2 font-bold {{ in_array($intervention->statut, ['payer']) ? 'text-green-700' : 'text-gray-400' }} uppercase text-center">Payé</span>
+                                            class="text-[8px] mt-2 font-bold {{ in_array($intervention->statut, ['receptionne', 'attente_paiement', 'payer']) ? 'text-teal-600' : 'text-gray-400' }} uppercase text-center">Délai</span>
+                                    </div>
+
+                                    <div
+                                        class="hidden md:block w-full h-0.5 {{ in_array($intervention->statut, ['payer']) ? 'bg-teal-500' : 'bg-gray-200' }} -mt-5">
+                                    </div>
+
+                                    <!-- Step 5: Payé -->
+                                    <div class="flex flex-col items-center flex-1">
+                                        <div
+                                            class="w-8 h-8 rounded-full {{ in_array($intervention->statut, ['payer']) ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-400' }} flex items-center justify-center shadow-lg transition-all">
+                                            <i class="fas fa-check-double text-xs"></i>
+                                        </div>
                                         <span
-                                            class="text-[8px] text-gray-400 font-medium whitespace-nowrap underline italic">{{ $intervention->date_paiement_prevue ? \Carbon\Carbon::parse($intervention->date_paiement_prevue)->format('d/m/Y') : 'À planifier' }}</span>
+                                            class="text-[8px] mt-2 font-bold {{ in_array($intervention->statut, ['payer']) ? 'text-green-700' : 'text-gray-400' }} uppercase text-center">Payé</span>
                                     </div>
                                 </div>
                             </div>

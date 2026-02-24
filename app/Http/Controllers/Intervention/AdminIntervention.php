@@ -370,7 +370,7 @@ class AdminIntervention extends Controller
 
     public function accordees(Request $request)
     {
-        $query = Intervention::whereIn('statut', ['accord'])->with(['personnels', 'prestataire', 'responsable']);
+        $query = Intervention::whereIn('statut', ['accord', 'finance', 'receptionne', 'attente_paiement'])->with(['personnels', 'prestataire', 'responsable']);
 
         if ($request->has('search') && !empty($request->search)) {
             $search = $request->search;
@@ -407,7 +407,7 @@ class AdminIntervention extends Controller
 
     public function finance(Request $request)
     {
-        $query = Intervention::where('statut', 'finance')->with(['personnels', 'prestataire', 'financier']);
+        $query = Intervention::whereIn('statut', ['finance', 'receptionne', 'attente_paiement'])->with(['personnels', 'prestataire', 'financier']);
 
         if ($request->has('search') && !empty($request->search)) {
             $search = $request->search;
