@@ -47,6 +47,7 @@ Route::middleware(['auth:user', 'admin'])->prefix('admin')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('admin.users.index');
         Route::get('/archives', [UserController::class, 'archives'])->name('admin.users.archives');
         Route::patch('/{user}/restore', [UserController::class, 'restore'])->name('admin.users.restore');
+        Route::post('/{user}/send-access-code', [UserController::class, 'sendAccessCode'])->name('admin.users.send_access_code');
         Route::get('/create', [UserController::class, 'create'])->name('admin.users.create');
         Route::post('/', [UserController::class, 'store'])->name('admin.users.store');
         Route::get('/{user}', [UserController::class, 'show'])->name('admin.users.show');

@@ -88,6 +88,16 @@
                                             <i class="fas fa-trash-restore mr-2"></i> Restaurer
                                         </button>
                                     </form>
+
+                                    <form action="{{ route('admin.users.send_access_code', $user->id) }}" method="POST"
+                                        class="inline-block" onsubmit="return confirmSendCode(event)">
+                                        @csrf
+                                        <button type="submit" 
+                                            class="inline-flex items-center px-4 py-2 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg hover:bg-blue-100 hover:border-blue-300 transition-all font-medium text-sm shadow-sm ml-2"
+                                            title="Envoyer code d'accès">
+                                            <i class="fas fa-envelope mr-2"></i> Envoyer code
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         @empty
@@ -123,6 +133,31 @@
                     confirmButtonColor: '#10b981', // green-500
                     cancelButtonColor: '#9ca3af', // gray-400
                     confirmButtonText: 'Oui, restaurer',
+                    cancelButtonText: 'Annuler',
+                    customClass: {
+                        popup: 'rounded-2xl',
+                        confirmButton: 'rounded-xl px-6 py-3 font-bold',
+                        cancelButton: 'rounded-xl px-6 py-3 font-medium'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                })
+            }
+
+            function confirmSendCode(event) {
+                event.preventDefault();
+                const form = event.target;
+
+                Swal.fire({
+                    title: 'Restaurer et envoyer un code ?',
+                    text: "L'utilisateur sera restauré et un e-mail contenant un nouveau code d'accès lui sera envoyé.",
+                    icon: 'info',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3b82f6', // blue-500
+                    cancelButtonColor: '#9ca3af', // gray-400
+                    confirmButtonText: 'Oui, envoyer',
                     cancelButtonText: 'Annuler',
                     customClass: {
                         popup: 'rounded-2xl',

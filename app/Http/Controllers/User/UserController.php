@@ -178,4 +178,35 @@ class UserController extends Controller
         $user->restore();
         return redirect()->route('admin.users.archives')->with('success', 'Utilisateur restauré avec succès.');
     }
+
+    public function sendAccessCode($id)
+    {
+        try {
+            DB::beginTransaction();
+            $user = User::withTrashed()->findOrFail($id);
+
+            // Envoi de l'e-mail de vérification (même logique que dans store)
+            ResetCodePasswordUser::where('email', $user->email)->delete();
+            $code1 = rand(1000, 4000);
+            $code = $code1 . '' . $user->id;
+
+            ResetCodePasswordUser::create([
+                'code' => $code,
+                'email' => $user->email,
+            ]);
+
+            Notification::route('mail', $user->email)
+                ->notify(new sendEmailAfterUserRegister($code, $user->email));
+
+            $user->restore();
+
+            DB::commit();
+
+            return redirect()->route('admin.users.index')->with('success', 'L\'utilisateur a été restauré et le code d\'accès a été envoyé avec succès à ' . $user->email);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Erreur lors de l\'envoi du code d\'accès: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Une erreur est survenue lors de l\'envoi du code d\'accès.');
+        }
+    }
 }
