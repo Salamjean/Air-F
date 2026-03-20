@@ -42,7 +42,7 @@ class PasswordResetOTP extends Notification
     {
         return (new MailMessage)
             ->subject('Réinitialisation de votre mot de passe - Prestataire AF')
-            ->from('infos@plateau-apps.com', 'Prestataire AF')
+            ->from('contact@maelysimo.com', 'Prestataire AF')
             ->view('emails.password_reset_otp', [
                 'code' => $this->code,
                 'email' => $this->email,

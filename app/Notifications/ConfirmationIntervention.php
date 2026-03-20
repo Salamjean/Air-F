@@ -40,7 +40,7 @@ class ConfirmationIntervention extends Notification
     {
         return (new MailMessage)
             ->subject('Confirmation de votre intervention - ' . $this->intervention->code)
-            ->from('infos@plateau-apps.com', 'Prestataire AF')
+            ->from('contact@maelysimo.com', 'Prestataire AF')
             ->view('emails.interventions.confirmation', [
                 'intervention' => $this->intervention,
                 'messageContent' => $this->messageContent

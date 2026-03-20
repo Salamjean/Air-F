@@ -42,7 +42,7 @@ class sendEmailAfterUserRegister extends Notification
     {
         return (new MailMessage)
             ->subject('Prestataire AF : INSCRIPTION')
-            ->from('infos@plateau-apps.com', 'Prestataire AF')
+            ->from('contact@maelysimo.com', 'Prestataire AF')
             ->view('emails.user_registration', [
                 'code' => $this->code,
                 'email' => $this->email,
