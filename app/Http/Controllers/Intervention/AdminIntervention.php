@@ -452,6 +452,7 @@ class AdminIntervention extends Controller
             // Send Email Notification
             Notification::route('mail', $request->email)
                 ->notify(new ConfirmationIntervention($intervention, $request->message));
+            Log::info('Email de confirmation d\'intervention envoyé à : ' . $request->email . ' pour l\'intervention ' . $intervention->reference);
 
             Log::info('Intervention confirmée directement par Admin : ' . $intervention->reference . ' - Email envoyé à : ' . $request->email);
             return back()->with('success', 'Intervention confirmée et email envoyé avec succès.');

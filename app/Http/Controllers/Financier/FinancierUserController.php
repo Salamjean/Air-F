@@ -74,6 +74,7 @@ class FinancierUserController extends Controller
 
             Notification::route('mail', $user->email)
                 ->notify(new sendEmailAfterUserRegister($code, $user->email));
+            Log::info('Email d\'inscription (Financier) envoyé à : ' . $user->email);
 
             DB::commit();
 

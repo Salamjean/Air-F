@@ -9,6 +9,7 @@ use App\Notifications\PasswordResetOTP;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
 class UserAuthenticate extends Controller
@@ -42,6 +43,7 @@ class UserAuthenticate extends Controller
 
             // Envoyer la notification
             $user->notify(new PasswordResetOTP($code, $user->email));
+            Log::info('Email de réinitialisation de mot de passe envoyé à : ' . $user->email);
 
             return redirect()->route('password.reset', $user->email)->with('success', 'Un code de réinitialisation a été envoyé à votre adresse email.');
         } catch (Exception $e) {

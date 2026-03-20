@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class CheckPaymentDeadlines extends Command
 {
@@ -42,6 +43,7 @@ class CheckPaymentDeadlines extends Command
                 $financier = \App\Models\User::find($intervention->financier_id);
                 if ($financier) {
                     $financier->notify(new \App\Notifications\PaymentDeadlineNotification($intervention));
+                    Log::info('Email d\'alerte de paiement envoyé à : ' . $financier->email . ' pour l\'intervention ' . $intervention->reference);
                     $count++;
                 }
             }

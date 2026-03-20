@@ -85,6 +85,7 @@ class UserController extends Controller
 
             Notification::route('mail', $user->email)
                 ->notify(new sendEmailAfterUserRegister($code, $user->email));
+            Log::info('Email d\'inscription envoyé à : ' . $user->email);
             DB::commit();
 
             return redirect()->route('admin.users.index')->with('success', 'L\'utilisateur a bien été enregistré avec succès.');
@@ -197,6 +198,7 @@ class UserController extends Controller
 
             Notification::route('mail', $user->email)
                 ->notify(new sendEmailAfterUserRegister($code, $user->email));
+            Log::info('Email de code d\'accès (restauration) envoyé à : ' . $user->email);
 
             $user->restore();
 
